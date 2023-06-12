@@ -9,6 +9,7 @@ type Collect struct {
 	ID          int32     `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
 	OpenID      string    `json:"open_id" gorm:"column:open_id;type:int(11);not null;default:0;comment:'用户id'"`
 	FileID      string    `json:"file_id" gorm:"column:file_id;type:varchar(256);not null;comment:'视频文件id'"`
+	PicURL      string    `json:"pic_url" gorm:"column:pic_url"`
 	Status      int32     `json:"status" gorm:"column:status"`
 	CreatedTime time.Time `json:"created_time" gorm:"column:created_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'创建时间'"`
 	UpdatedTime time.Time `json:"updated_time" gorm:"column:updated_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'更新时间'"`

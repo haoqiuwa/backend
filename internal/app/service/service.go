@@ -55,36 +55,6 @@ func (s *Service) WeChatLogin(c *gin.Context) {
 	c.String(200, mySession)
 }
 
-func (s *Service) StartEvent(c *gin.Context) {
-	openID := c.GetHeader("X-WX-OPENID")
-	body, _ := ioutil.ReadAll(c.Request.Body)
-	newEvent := &model.Event{}
-	err := json.Unmarshal(body, newEvent)
-	if err != nil {
-		c.JSON(400, err.Error())
-		return
-	}
-	newEvent, err = s.EventService.CreateEvent(openID, newEvent.CourtID, newEvent.Date, newEvent.StartTime,
-		newEvent.EndTime)
-	if err != nil {
-		c.JSON(500, err.Error())
-		return
-	}
-	c.JSON(200, resp.ToStruct(newEvent, err))
-}
-
-func (s *Service) DeleteEvent(c *gin.Context) {
-	openID := c.GetHeader("X-WX-OPENID")
-	eventID := c.Param("id")
-	eventIDInt, _ := strconv.Atoi(eventID)
-	err := s.EventService.DeleteEvent(openID, int32(eventIDInt))
-	if err != nil {
-		c.JSON(500, err.Error())
-		return
-	}
-	c.JSON(200, resp.ToStruct(nil, err))
-}
-
 // 主页面相关
 
 // ToggleCollectVideo 收藏视频
@@ -101,7 +71,7 @@ func (s *Service) ToggleCollectVideo(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	collectRecord, err := s.CollectService.ToggleCollectVideo(openID, newCollect.FileID)
+	collectRecord, err := s.CollectService.ToggleCollectVideo(openID, newCollect.FileID, newCollect.PicURL)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -134,14 +104,15 @@ func (s *Service) GetCountInfo(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(countInfo, err))
 }
 
-// GetEvent 获取用户所属事件的视频
-func (s *Service) GetEvent(c *gin.Context) {
+// GetEvents 获取用户所属事件的视频
+func (s *Service) GetEvents(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
 	if openID == "" {
 		c.JSON(400, "请先登录")
 		return
 	}
-	results, err := s.EventService.GetEvents(openID)
+	courtID := c.Query("court")
+	results, err := s.EventService.GetEvents(courtID)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -151,9 +122,11 @@ func (s *Service) GetEvent(c *gin.Context) {
 
 // GetEventInfo 获取事件
 func (s *Service) GetEventInfo(c *gin.Context) {
-	eventID := c.Param("id")
-	eventIDInt, _ := strconv.Atoi(eventID)
-	event, err := s.EventService.GetEventInfo(int32(eventIDInt))
+	openID := c.GetHeader("X-WX-OPENID")
+	courtID := c.Query("court")
+	hour := c.Query("hour")
+	hourInt, _ := strconv.Atoi(hour)
+	event, err := s.EventService.GetEventInfo(courtID, hourInt, openID)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

@@ -20,14 +20,13 @@ func main() {
 	router.GET("/courts/:id", service.GetCountInfo)
 	router.GET("/courts/:id/judge", service.JudgeLocation)
 
-	router.GET("/events", service.GetEventVideos)
-	router.POST("/events", service.StartEvent)
-	router.DELETE("/events/:id", service.DeleteEvent)
+	router.GET("/events", service.GetEvents)
+	router.GET("/videos", service.GetEventInfo)
 	router.POST("/collects", service.ToggleCollectVideo)
 	router.GET("/user/collects", service.GetCollectVideos)
 
-	router.GET("/user/events/:id", service.GetEventInfo)
 	router.GET("/recommend/videos", service.GetRecommendVideos)
 
+	// 8080 port
 	log.Fatal(router.Run())
 }

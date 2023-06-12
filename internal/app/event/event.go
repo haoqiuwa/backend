@@ -3,6 +3,8 @@ package event
 import (
 	"fmt"
 	"log"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
@@ -10,9 +12,10 @@ import (
 )
 
 type Service struct {
-	EventDao *model.Event
-	VideoDao *model.Video
-	CourtDao *model.Court
+	EventDao   *model.Event
+	VideoDao   *model.Video
+	CourtDao   *model.Court
+	CollectDao *model.Collect
 }
 
 func NewService() *Service {
@@ -21,152 +24,133 @@ func NewService() *Service {
 	}
 }
 
-type EventRepos struct {
-	model.Event
-	CourtName     string         `json:"court_name"`
-	Videos        []string       `json:"videos"`
-	VideosWithGif []VideoWithGif `json:"videos_with_gif"`
+type Event struct {
+	StartTime int32  `json:"start_time"`
+	EndTime   int32  `json:"end_time"`
+	CourtName string `json:"court_name"`
+	Status    int32  `json:"status"`
 }
 
-type VideoWithGif struct {
-	Gif             string `json:"gif"`
-	Video           string `json:"video"`
-	LowQualityVideo string `json:"low_quality_video"`
+type EventDetail struct {
+	VideoSeries []*VideoSeries `json:"video_series"`
 }
 
-func (s *Service) CreateEvent(userOpenID string, courtID int32, date, startTime, endTime int32) (*model.Event, error) {
-	// create event
-	event, err := s.EventDao.Create(&model.Event{
-		OpenID:      userOpenID,
-		CourtID:     courtID,
-		Date:        date,
-		StartTime:   startTime,
-		EndTime:     endTime,
-		CreatedTime: time.Now(),
-		UpdatedTime: time.Now(),
-	})
-	if err != nil {
-		return nil, err
-	}
-	return event, err
+type VideoSeries struct {
+	StartTime string   `json:"start_time"`
+	EndTime   string   `json:"end_time"`
+	Status    int32    `json:"status"`
+	Videos    []*Video `json:"videos"`
 }
 
-func (s *Service) DeleteEvent(openID string, eventID int32) error {
-	return s.EventDao.Delete(&model.Event{OpenID: openID, ID: eventID})
+type Video struct {
+	IsCollected bool   `json:"is_collected"`
+	Url         string `json:"url"`
+	PicUrl      string `json:"pic_url"`
 }
 
-func (s *Service) GetEventsByUser(userOpenID string) ([]model.Event, error) {
-	events, err := s.EventDao.GetsByDesc(&model.Event{OpenID: userOpenID})
-	if err != nil {
-		return nil, err
-	}
-	return events, nil
-}
-
-func (s *Service) GetEventInfo(eventID int32) (EventRepos, error) {
-	event, err := s.EventDao.Get(&model.Event{ID: eventID})
-	if err != nil {
-		return EventRepos{}, err
-	}
-	court, err := s.CourtDao.Get(&model.Court{ID: event.CourtID})
-	if err != nil {
-		return EventRepos{}, err
-	}
-	startTime := event.StartTime
-	videos := make([]string, 0)
-	videosWithGif := make([]VideoWithGif, 0)
-	for startTime < event.EndTime {
-		allLinks, err := tcos.GetCosFileList(fmt.Sprintf("highlight/court%d/%d/%d/", event.CourtID, event.Date,
-			startTime))
-		if err != nil {
-			log.Println(err)
-			return EventRepos{}, err
-		}
-		videoLinks := filterVideos(allLinks)
-		videos = append(videos, videoLinks...)
-		videosWithGif = append(videosWithGif, getVideosWithGif(videoLinks)...)
-		if startTime%100 != 0 {
-			startTime += 100
-			startTime -= 30
-		} else {
-			startTime += 30
-		}
-	}
-	return EventRepos{Event: *event, CourtName: court.Name, Videos: videos, VideosWithGif: videosWithGif}, nil
-}
-
-func (s *Service) GetEvents(openID string) ([]EventRepos, error) {
-	events := make([]model.Event, 0)
-	var err error
-	events, err = s.GetEventsByUser(openID)
+func (s *Service) GetEvents(courtID string) ([]Event, error) {
+	// get today's date like 20210101
+	today := time.Now().Format("20060102")
+	results := make([]Event, 0)
+	// get cos links
+	allLinks, err := tcos.GetCosFileList(fmt.Sprintf("highlight/court%s/%s/v", courtID, today))
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	results := make([]EventRepos, 0)
-	for _, e := range events {
-		videos := make([]string, 0)
-		videosWithGif := make([]VideoWithGif, 0)
-		startTime := e.StartTime
-		for startTime < e.EndTime {
-			allLinks, err := tcos.GetCosFileList(fmt.Sprintf("highlight/court%d/%d/%d/", e.CourtID, e.Date,
-				startTime))
-			if err != nil {
-				log.Println(err)
-				return nil, err
-			}
-			videoLinks := filterVideos(allLinks)
-			videos = append(videos, videoLinks...)
-			videosWithGif = append(videosWithGif, getVideosWithGif(videoLinks)...)
-			if startTime%100 != 0 {
-				startTime += 100
-				startTime -= 30
-			} else {
-				startTime += 30
-			}
-		}
-		court, err := s.CourtDao.Get(&model.Court{ID: e.CourtID})
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-		results = append(results, EventRepos{Event: e, CourtName: court.Name, Videos: videos,
-			VideosWithGif: videosWithGif})
+	// get hours by links, links are like 4042-prod/highlight/court1/20210101/10-32.mp4, 10-32 means hour and minute
+	distinctHours := make(map[int]int)
+	for _, link := range allLinks {
+		links := strings.Split(link, "/")
+		hour := strings.Split(links[len(links)-1], "-")[0]
+		hourInt, _ := strconv.Atoi(hour[1:])
+		distinctHours[hourInt] += 1
+	}
+	// get hour by order
+	hours := make([]int, 0)
+	for hour := range distinctHours {
+		hours = append(hours, hour)
+	}
+	// sort hours
+	sort.Slice(hours, func(i, j int) bool { return hours[i] > hours[j] })
+	// get events by hours
+	for _, hour := range hours {
+		results = append(results, Event{StartTime: int32(hour), EndTime: int32(hour + 1), CourtName: courtID, Status: 0})
+	}
+	if time.Now().Hour() == hours[0] {
+		results[0].Status = 1
+	} else if time.Now().Hour() == hours[0]+1 && time.Now().Minute() < 10 {
+		results[0].Status = 1
 	}
 	return results, nil
 }
 
-func getVideosWithGif(videos []string) []VideoWithGif {
-	videosWithGif := make([]VideoWithGif, 0)
-	for _, video := range videos {
-		// replace mp4 to gif
-		links := strings.Split(video, ".")
-		links[len(links)-1] = "gif"
-		gif := strings.Join(links, ".")
-		lowQualityVideos := getLowQualityVideo(video)
-		videosWithGif = append(videosWithGif, VideoWithGif{Gif: gif, Video: video, LowQualityVideo: lowQualityVideos})
+func (s *Service) GetEventInfo(courtID string, hour int, openID string) (*EventDetail, error) {
+	today := time.Now().Format("20060102")
+	allLinks, err := tcos.GetCosFileList(fmt.Sprintf("highlight/court%s/%s/v%d", courtID, today, hour))
+	if err != nil {
+		log.Println(err)
+		return nil, err
 	}
-	return videosWithGif
-}
-
-func filterVideos(links []string) []string {
-	// filter link end with .mp4
-	videos := make([]string, 0)
-	for _, link := range links {
-		if strings.HasSuffix(link, ".mp4") {
-			videos = append(videos, link)
+	picLinks, err := tcos.GetCosFileList(fmt.Sprintf("highlight/court%s/%s/p%d", courtID, today, hour))
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	// order by minute
+	sort.Slice(allLinks, func(i, j int) bool {
+		ssi := strings.Split(allLinks[i], "/")
+		ssj := strings.Split(allLinks[j], "/")
+		return strings.Compare(ssi[len(ssi)-1], ssj[len(ssj)-1]) < 0
+	})
+	sort.Slice(picLinks, func(i, j int) bool {
+		ssi := strings.Split(picLinks[i], "/")
+		ssj := strings.Split(picLinks[j], "/")
+		return strings.Compare(ssi[len(ssi)-1], ssj[len(ssj)-1]) < 0
+	})
+	eventDetail := &EventDetail{VideoSeries: []*VideoSeries{}}
+	firstHalfVideo := &VideoSeries{StartTime: fmt.Sprintf("%d:%s", hour, "00"), EndTime: fmt.Sprintf("%d:%d", hour, 30)}
+	secondHalfVideo := &VideoSeries{}
+	for index := range allLinks {
+		isCollected := false
+		collects, err := s.CollectDao.Gets(&model.Collect{OpenID: openID, Status: 1, FileID: allLinks[index]})
+		if err != nil {
+			return nil, err
+		}
+		if len(collects) > 0 {
+			isCollected = true
+		}
+		links := strings.Split(allLinks[index], "/")
+		minuteString := strings.Split(strings.Split(links[len(links)-1], "-")[1], ".")[0]
+		minute, _ := strconv.Atoi(minuteString)
+		if minute <= 30 {
+			firstHalfVideo.Videos = append(firstHalfVideo.Videos, &Video{
+				IsCollected: isCollected,
+				Url:         allLinks[index],
+				PicUrl:      picLinks[index],
+			})
+		} else {
+			secondHalfVideo.Videos = append(secondHalfVideo.Videos, &Video{
+				IsCollected: isCollected,
+				Url:         allLinks[index],
+				PicUrl:      picLinks[index],
+			})
 		}
 	}
-	return videos
-}
-
-func getLowQualityVideo(video string) string {
-	domains := strings.Split(video, "/")
-	for index, domain := range domains {
-		if domain == "highlight" {
-			domains[index] = "preview"
-			break
+	if len(firstHalfVideo.Videos) > 0 {
+		if len(secondHalfVideo.Videos) == 0 && len(firstHalfVideo.Videos) < 6 && time.Now().Hour() == hour && time.
+			Now().Minute() < 40 {
+			firstHalfVideo.Status = 1
 		}
+		eventDetail.VideoSeries = append(eventDetail.VideoSeries, firstHalfVideo)
+
 	}
-	return strings.Join(domains, "/")
+	if len(secondHalfVideo.Videos) > 0 {
+		if len(secondHalfVideo.Videos) < 6 && (time.Now().Hour() == hour || (time.Now().Hour() == hour+1 && time.Now().
+			Minute() < 10)) {
+			secondHalfVideo.Status = 1
+		}
+		eventDetail.VideoSeries = append(eventDetail.VideoSeries, secondHalfVideo)
+	}
+	return eventDetail, nil
 }
