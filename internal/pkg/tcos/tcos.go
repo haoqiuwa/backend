@@ -24,6 +24,7 @@ type TmpAuth struct {
 func GetCosFileList(prefix string) ([]string, error) {
 	resp, err := http.Get("http://api.weixin.qq.com/_/cos/getauth")
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -49,10 +50,11 @@ func GetCosFileList(prefix string) ([]string, error) {
 	})
 	opt := &cos.BucketGetOptions{
 		Prefix:  prefix,
-		MaxKeys: 100,
+		MaxKeys: 1000,
 	}
 	cos, _, err := client.Bucket.Get(context.Background(), opt)
 	if err != nil {
+		log.Print(err)
 		return nil, err
 	}
 	var videoIDs []string
@@ -60,6 +62,5 @@ func GetCosFileList(prefix string) ([]string, error) {
 		videoIDs = append(videoIDs, fmt.Sprintf("cloud://prod-2gicsblt193f5dc8."+
 			"7072-prod-2gicsblt193f5dc8-1318337180/%s", v.Key))
 	}
-	log.Printf("videoIDs: %+v", videoIDs)
 	return videoIDs, nil
 }

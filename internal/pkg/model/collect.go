@@ -11,6 +11,7 @@ type Collect struct {
 	FileID      string    `json:"file_id" gorm:"column:file_id;type:varchar(256);not null;comment:'视频文件id'"`
 	PicURL      string    `json:"pic_url" gorm:"column:pic_url"`
 	Status      int32     `json:"status" gorm:"column:status"`
+	VideoType   int32     `json:"video_type" gorm:"column:video_type"`
 	CreatedTime time.Time `json:"created_time" gorm:"column:created_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'创建时间'"`
 	UpdatedTime time.Time `json:"updated_time" gorm:"column:updated_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'更新时间'"`
 }
