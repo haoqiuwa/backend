@@ -2,11 +2,12 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"strconv"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/resp"
+
+	"github.com/gin-gonic/gin"
 )
 
 // ToggleCollectVideo 收藏视频
@@ -16,7 +17,7 @@ func (s *Service) ToggleCollectVideo(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	newCollect := &model.Collect{}
 	err := json.Unmarshal(body, newCollect)
 	if err != nil {
@@ -82,7 +83,7 @@ func (s *Service) CollectSurvey(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	data, err := s.CollectService.CreateSurvey(openID, string(body))
 	if err != nil {
 		c.JSON(500, err.Error())
@@ -98,7 +99,7 @@ func (s *Service) CollectUserEvent(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	userEvent := &model.UserEvent{}
 	err := json.Unmarshal(body, userEvent)
 	if err != nil {

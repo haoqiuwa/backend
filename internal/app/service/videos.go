@@ -2,12 +2,13 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"strconv"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/resp"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GetEvents 获取用户所属事件的视频
@@ -73,7 +74,7 @@ func (s *Service) GetRecords(c *gin.Context) {
 
 // StoreVideo 存储视频
 func (s *Service) StoreVideo(c *gin.Context) {
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	video := &model.Video{}
 	err := json.Unmarshal(body, video)
 	if err != nil {

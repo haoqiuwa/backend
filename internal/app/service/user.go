@@ -2,9 +2,10 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"wxcloudrun-golang/internal/pkg/resp"
+
+	"github.com/gin-gonic/gin"
 )
 
 type PhoneReq struct {
@@ -20,7 +21,7 @@ func (s *Service) WeChatLogin(c *gin.Context) {
 		return
 	}
 	var phoneReq PhoneReq
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	_ = json.Unmarshal(body, &phoneReq)
 	// 根据code获取 openID 和 session_key
 	wxLoginResp, err := s.UserService.WXLogin(openID, phoneReq.CloudID)
@@ -42,7 +43,7 @@ func (s *Service) StoreCourt(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	var courtReq courtReq
 	_ = json.Unmarshal(body, &courtReq)
 	err := s.UserService.StoreCourt(openID, courtReq.Court)

@@ -19,7 +19,13 @@ func TestGetCosFileList(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			GetCosFileList(tt.args.prefix)
+			vs, _ := GetCosFileList(tt.args.prefix)
+			// if nil != err {
+			// 	t.Errorf("GetCosFileList() error = %v", err)
+			// }
+			for v := range vs {
+				t.Log("find video:", v)
+			}
 		})
 	}
 }

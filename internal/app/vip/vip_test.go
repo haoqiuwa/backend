@@ -84,7 +84,7 @@ func TestService_CreateOrder(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := s.CreateOrder(tt.args.openID, tt.args.orderType, tt.args.cost)
+			_, err := s.CreateOrder(tt.args.openID, tt.args.orderType, tt.args.cost, 1)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateOrder() error = %v, wantErr %v", err, tt.wantErr)
 				return

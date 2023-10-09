@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
@@ -54,7 +54,7 @@ func (s *Service) WXLogin(openid string, cloudID string) (bool, error) {
 		return false, err
 	}
 	defer resp.Body.Close()
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return false, err

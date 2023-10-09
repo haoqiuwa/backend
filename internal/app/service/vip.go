@@ -2,10 +2,11 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/resp"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GetVipCount	获取vip数量
@@ -45,7 +46,7 @@ func (s *Service) CreateVipOrder(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	order := &model.Order{}
 	err := json.Unmarshal(body, order)
 	if err != nil {
@@ -67,7 +68,7 @@ func (s *Service) UpdateVipCount(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, _ := io.ReadAll(c.Request.Body)
 	order := &model.Vip{}
 	err := json.Unmarshal(body, order)
 	if err != nil {

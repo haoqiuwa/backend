@@ -17,8 +17,17 @@ func Init() error {
 
 	source := "%s:%s@tcp(%s)/%s?readTimeout=1500ms&writeTimeout=1500ms&charset=utf8&loc=Local&&parseTime=true"
 	user := os.Getenv("MYSQL_USERNAME")
+	if user == "" {
+		user = "root"
+	}
 	pwd := os.Getenv("MYSQL_PASSWORD")
+	if pwd == "" {
+		pwd = "pV7XmdNe"
+	}
 	addr := os.Getenv("MYSQL_ADDRESS")
+	if addr == "" {
+		addr = "sh-cynosdbmysql-grp-8gumlyuq.sql.tencentcdb.com:24655"
+	}
 
 	dataBase := os.Getenv("MYSQL_DATABASE")
 	if dataBase == "" {
