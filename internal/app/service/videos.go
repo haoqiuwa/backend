@@ -3,9 +3,11 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"strconv"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
+	"wxcloudrun-golang/internal/pkg/request"
 	"wxcloudrun-golang/internal/pkg/resp"
 
 	"github.com/gin-gonic/gin"
@@ -89,6 +91,98 @@ func (s *Service) StoreVideo(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+// 处理硬件和算法端push过来的事件
+func (s *Service) HandlePushEvent(c *gin.Context) {
+	body, _ := io.ReadAll(c.Request.Body)
+	log.Println("HandlePushEvent req:", string(body))
+	req := &request.EventReq{}
+	err := json.Unmarshal(body, req)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	jsonb, err := json.Marshal(req.Data)
+	if nil != err {
+		c.JSON(400, err.Error())
+		return
+	}
+	switch req.EventType {
+	case 1:
+		var eventData request.VideoEventReq
+		err = toStruct(jsonb, &eventData)
+		if nil != err {
+			c.JSON(400, err.Error())
+			return
+		}
+		log.Println("HandlePushEvent Received EventType1:", eventData)
+		video := &model.Video{}
+		video.Court = eventData.Court
+		video.CreatedTime = time.Now()
+		video.UpdatedTime = time.Now()
+		video.Date = eventData.Date
+		video.FileName = eventData.FileName
+		video.FilePath = eventData.FilePath
+		video.StartTime = eventData.StartTimestamp
+		video.EndTime = eventData.EndTimestamp
+		video.TeamAImgPath = eventData.TeamAImgPath
+		video.TeamBImgPath = eventData.TeamBImgPath
+		video.UUID = eventData.UUID
+		video.HoverImgPath = eventData.HoverImgPath
+		video.Time = eventData.Time
+		jsonb, _ := json.Marshal(video)
+		log.Println("json:", string(jsonb))
+		_, err = s.EventService.StoreCourtVideo(video)
+	case 2:
+		var eventData request.VideoClipsEventReq
+		err = toStruct(jsonb, &eventData)
+		if nil != err {
+			c.JSON(400, err.Error())
+			return
+		}
+		videoClips := &model.VideoClips{}
+		videoClips.CourtUUID = eventData.UUID
+		videoClips.CreateTime = time.Now()
+		videoClips.UpdateTime = time.Now()
+		videoClips.HoverImgPath = eventData.HoverImgPath
+		videoClips.FilePath = eventData.FilePath
+		videoClips.VideoType = eventData.VideoType
+		videoClips.Time = eventData.Time
+		videoClips.Team = eventData.Team
+		err = s.EventService.StoreVideoClips(videoClips)
+		log.Println("HandlePushEvent Received EventType2 videoClips: ", videoClips)
+	case 3:
+		var eventData request.VideoImgEventReq
+		err = toStruct(jsonb, &eventData)
+		if nil != err {
+			c.JSON(400, err.Error())
+			return
+		}
+		vm := &model.VideoImg{}
+		vm.CourtUUID = eventData.UUID
+		vm.CreateTime = time.Now()
+		vm.UpdateTime = time.Now()
+		vm.ImgPath = eventData.FilePath
+		log.Println("HandlePushEvent Received EventType3 VideoImg: ", vm)
+		err = s.EventService.StoreVideoImg(vm)
+	default:
+		c.JSON(400, err.Error())
+		return
+	}
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	c.JSON(200, resp.ToStruct("ok", err))
+}
+
+func toStruct(jsonb []byte, s interface{}) error {
+	err := json.Unmarshal(jsonb, s)
+	if nil != err {
+		log.Println("toStruct err", err)
+	}
+	return err
+}
+
 // GetMatchHighlights 获取比赛集锦
 func (s *Service) GetMatchHighlights(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
@@ -149,4 +243,34 @@ func (s *Service) GetAIContents(c *gin.Context) {
 	}
 	c.JSON(200, resp.ToStruct(data, err))
 
+}
+
+func (s *Service) GetAiVideos(c *gin.Context) {
+	uuid := c.Param("uuid")
+	data, err := s.EventService.GetAiVideos(uuid)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, resp.ToStruct(data, err))
+}
+
+func (s *Service) GetHighlightsVideos(c *gin.Context) {
+	uuid := c.Param("uuid")
+	data, err := s.EventService.GetHighlightsVideos(uuid)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, resp.ToStruct(data, err))
+}
+
+func (s *Service) GetVideoImg(c *gin.Context) {
+	uuid := c.Param("uuid")
+	data, err := s.EventService.GetVideoImg(uuid)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, resp.ToStruct(data, err))
 }

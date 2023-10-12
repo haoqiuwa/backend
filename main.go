@@ -40,9 +40,16 @@ func main() {
 	router.GET("/match/highlights", service.GetMatchHighlights)
 	router.GET("/match/records", service.GetMatchRecords)
 	router.GET("/aigc/contents", service.GetAIContents)
+	//场次ai视频
+	router.GET("/ai/videos/:uuid", service.GetAiVideos)
+	//场次集锦视频
+	router.GET("/highlights/videos/:uuid", service.GetHighlightsVideos)
+	//场次图片
+	router.GET("/videos/img/:uuid", service.GetVideoImg)
 
 	// 视频处理
 	router.POST("/videos", service.StoreVideo)
+	router.POST("/videos/event/v1", service.HandlePushEvent)
 	router.POST("/collects", service.ToggleCollectVideo)
 	router.POST("/user/event", service.CollectUserEvent)
 

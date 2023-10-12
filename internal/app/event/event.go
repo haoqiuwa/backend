@@ -12,9 +12,11 @@ import (
 var cosLink = "cloud://prod-2gicsblt193f5dc8.7072-prod-2gicsblt193f5dc8-1318337180/"
 
 type Service struct {
-	VideoDao   *model.Video
-	CourtDao   *model.Court
-	CollectDao *model.Collect
+	VideoDao      *model.Video
+	VideoClipsDao *model.VideoClips
+	VideoImgDao   *model.VideoImg
+	CourtDao      *model.Court
+	CollectDao    *model.Collect
 }
 
 func NewService() *Service {
@@ -122,6 +124,37 @@ func (s *Service) StoreVideo(video *model.Video) (string, error) {
 		return "", err
 	}
 	return record.FilePath, nil
+}
+
+func (s *Service) StoreCourtVideo(video *model.Video) (bool, error) {
+	old, err := s.VideoDao.GetVideoByUUID(video.UUID)
+	if err != nil {
+		return false, err
+	}
+	if old != nil {
+		video.ID = old.ID
+		video.CreatedTime = old.CreatedTime
+		_, err := s.VideoDao.Update(video)
+		if nil != err {
+			return false, err
+		}
+	} else {
+		_, err := s.VideoDao.Create(video)
+		if nil != err {
+			return false, err
+		}
+	}
+	return true, nil
+}
+
+func (s *Service) StoreVideoClips(clips *model.VideoClips) error {
+	_, err := s.VideoClipsDao.Create(clips)
+	return err
+}
+
+func (s *Service) StoreVideoImg(img *model.VideoImg) error {
+	_, err := s.VideoImgDao.Create(img)
+	return err
 }
 
 // GetMatchRecords 获取比赛录像
@@ -313,4 +346,17 @@ func (s *Service) GetAIContent(date int32, courtID int32, hour int32, openID str
 		content.Videos[i], content.Videos[j] = content.Videos[j], content.Videos[i]
 	}
 	return content, nil
+}
+
+func (s *Service) GetAiVideos(uuid string) ([]model.VideoClips, error) {
+	r, e := s.VideoClipsDao.GetByCourtUuidAndVideoType(uuid, 2)
+	return r, e
+}
+func (s *Service) GetHighlightsVideos(uuid string) ([]model.VideoClips, error) {
+	r, e := s.VideoClipsDao.GetByCourtUuidAndVideoType(uuid, 1)
+	return r, e
+}
+func (s *Service) GetVideoImg(uuid string) ([]model.VideoImg, error) {
+	r, e := s.VideoImgDao.GetByCourtUuid(uuid)
+	return r, e
 }

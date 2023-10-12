@@ -6,18 +6,24 @@ import (
 )
 
 type Video struct {
-	ID          int32     `gorm:"primary_key" json:"id"`
-	FilePath    string    `gorm:"column:file_path" json:"file_path"`
-	Date        int32     `gorm:"column:date" json:"date"`
-	Time        string    `gorm:"column:time" json:"time"`
-	Type        int32     `gorm:"column:type" json:"type"`
-	Court       int32     `gorm:"column:court" json:"court"`
-	Hour        int32     `gorm:"column:hour" json:"hour"`
-	FileName    string    `gorm:"column:file_name" json:"file_name"`
-	VideoName   string    `gorm:"column:video_name" json:"video_name"`
-	FileType    int32     `gorm:"column:file_type" json:"file_type"`
-	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
+	UUID         string    `gorm:"uuid" json:"uuid"`
+	ID           int32     `gorm:"primary_key" json:"id"`
+	FilePath     string    `gorm:"column:file_path" json:"file_path"`
+	Date         int32     `gorm:"column:date" json:"date"`
+	Time         int32     `gorm:"column:time" json:"time"`
+	Type         int32     `gorm:"column:type" json:"type"`
+	Court        int32     `gorm:"column:court" json:"court"`
+	Hour         int32     `gorm:"column:hour" json:"hour"`
+	FileName     string    `gorm:"column:file_name" json:"file_name"`
+	VideoName    string    `gorm:"column:video_name" json:"video_name"`
+	FileType     int32     `gorm:"column:file_type" json:"file_type"`
+	CreatedTime  time.Time `gorm:"column:created_time" json:"created_time"`
+	UpdatedTime  time.Time `gorm:"column:updated_time" json:"updated_time"`
+	StartTime    int64     `gorm:"column:start_time" json:"start_time"`
+	EndTime      int64     `gorm:"column:end_time" json:"end_time"`
+	TeamAImgPath string    `gorm:"column:team_a_img_path" json:"team_a_img_path"`
+	TeamBImgPath string    `gorm:"column:team_b_img_path" json:"team_b_img_path"`
+	HoverImgPath string    `gorm:"column:hover_img_path" json:"hover_img_path"`
 }
 
 // GORM table name for Video struct
@@ -93,4 +99,10 @@ func (obj *Video) GetMatchPictures(courtID int32, videoType int32) ([]*Video, er
 		courtID,
 		videoType).Order("created_time desc").Find(&results).Error
 	return results, err
+}
+
+func (obj *Video) GetVideoByUUID(uuid string) (*Video, error) {
+	result := new(Video)
+	err := db.Get().Table(obj.TableName()).First(&result, "uuid=?", uuid).Error
+	return result, err
 }
