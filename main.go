@@ -40,6 +40,8 @@ func main() {
 	router.GET("/match/highlights", service.GetMatchHighlights)
 	router.GET("/match/records", service.GetMatchRecords)
 	router.GET("/aigc/contents", service.GetAIContents)
+	//时间段筛选
+	router.GET("/time/range", service.TimeRange)
 	//场次ai视频
 	router.GET("/ai/videos/:uuid", service.GetAiVideos)
 	//场次集锦视频

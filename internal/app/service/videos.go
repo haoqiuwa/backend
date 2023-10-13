@@ -277,3 +277,14 @@ func (s *Service) GetVideoImg(c *gin.Context) {
 	}
 	c.JSON(200, resp.ToStruct(data, err))
 }
+
+func (s *Service) TimeRange(c *gin.Context) {
+	dateStr := c.Query("date")
+	date, err := strconv.Atoi(dateStr)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	data, err := s.EventService.GetTimeRange(int32(date))
+	c.JSON(200, resp.ToStruct(data, err))
+}
