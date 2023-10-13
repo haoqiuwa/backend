@@ -255,6 +255,7 @@ func (s *Service) GetAiVideos(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+// 获取集锦视频
 func (s *Service) GetHighlightsVideos(c *gin.Context) {
 	uuid := c.Param("uuid")
 	data, err := s.EventService.GetHighlightsVideos(uuid)
@@ -265,6 +266,7 @@ func (s *Service) GetHighlightsVideos(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+// 获取视频图册
 func (s *Service) GetVideoImg(c *gin.Context) {
 	uuid := c.Param("uuid")
 	data, err := s.EventService.GetVideoImg(uuid)
