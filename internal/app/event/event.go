@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
+
+	"gorm.io/gorm"
 )
 
 var cosLink = "cloud://prod-2gicsblt193f5dc8.7072-prod-2gicsblt193f5dc8-1318337180/"
@@ -128,8 +130,8 @@ func (s *Service) StoreVideo(video *model.Video) (string, error) {
 
 func (s *Service) StoreCourtVideo(video *model.Video) (bool, error) {
 	old, err := s.VideoDao.GetVideoByUUID(video.UUID)
-	if err != nil {
-		return false, err
+	if err == gorm.ErrRecordNotFound {
+		old = nil
 	}
 	if old != nil {
 		video.ID = old.ID
