@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
@@ -287,5 +288,10 @@ func (s *Service) TimeRange(c *gin.Context) {
 		return
 	}
 	data, err := s.EventService.GetTimeRange(int32(date))
+	if nil == err {
+		sort.Slice(data, func(i, j int) bool {
+			return data[i] < data[j]
+		})
+	}
 	c.JSON(200, resp.ToStruct(data, err))
 }
