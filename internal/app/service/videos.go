@@ -278,6 +278,7 @@ func (s *Service) GetVideoImg(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+// 查询时间段
 func (s *Service) TimeRange(c *gin.Context) {
 	dateStr := c.Query("date")
 	date, err := strconv.Atoi(dateStr)
