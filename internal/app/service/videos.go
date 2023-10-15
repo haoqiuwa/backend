@@ -295,3 +295,43 @@ func (s *Service) TimeRange(c *gin.Context) {
 	}
 	c.JSON(200, resp.ToStruct(data, err))
 }
+
+func (s *Service) GetVideoList(c *gin.Context) {
+	dateStr := c.Query("date")
+	date, err := strconv.Atoi(dateStr)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	hourStr := c.Query("hour")
+	hour, err := strconv.Atoi(hourStr)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	courtIdStr := c.Query("courtId")
+	courtId, err := strconv.Atoi(courtIdStr)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	data, err := s.EventService.GetVideoList(int32(date), int32(courtId), int32(hour))
+	c.JSON(200, resp.ToStruct(data, err))
+}
+
+func (s *Service) GetVideoDetails(c *gin.Context) {
+	uuid := c.Param("uuid")
+	data, err := s.EventService.VideoDetail(uuid)
+	c.JSON(200, resp.ToStruct(data, err))
+}
+
+func (s *Service) GetClipsVideoDetail(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	data, err := s.EventService.GetAiVideoDetail(int32(id))
+	c.JSON(200, resp.ToStruct(data, err))
+}

@@ -366,3 +366,16 @@ func (s *Service) GetTimeRange(date int32) ([]int32, error) {
 	r, e := s.VideoDao.GetDistinctHours(date)
 	return r, e
 }
+func (s *Service) GetVideoList(date int32, courtID int32, hour int32) ([]*model.Video, error) {
+	videos, err := s.VideoDao.GetVideoList(date, courtID, hour)
+	return videos, err
+}
+func (s *Service) VideoDetail(uuid string) (*model.Video, error) {
+	r, e := s.VideoDao.GetVideoByUUID(uuid)
+	return r, e
+}
+
+func (s *Service) GetAiVideoDetail(id int32) (model.VideoClips, error) {
+	r, e := s.VideoClipsDao.GetById(id)
+	return r, e
+}

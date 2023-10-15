@@ -74,6 +74,15 @@ func (obj *Video) GetVideos(date int32, courtID int32, hour int32, videoType int
 	return results, err
 }
 
+func (obj *Video) GetVideoList(date int32, courtID int32, hour int32) ([]*Video, error) {
+	results := make([]*Video, 0)
+	err := db.Get().Table(obj.TableName()).Where(
+		"date = ? and court = ? and hour = ? ", date,
+		courtID,
+		hour).Order("id desc").Find(&results).Error
+	return results, err
+}
+
 func (obj *Video) GetPictures(date int32, courtID int32, hour int32, videoType int32) ([]*Video, error) {
 	results := make([]*Video, 0)
 	err := db.Get().Table(obj.TableName()).Debug().Where(

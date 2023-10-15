@@ -38,3 +38,8 @@ func (obj *VideoClips) GetByCourtUuidAndVideoType(uuid string, videoType int32) 
 	err := db.Get().Table(obj.TableName()).Where("court_uuid = ? and video_type= ?", uuid, videoType).Find(&results).Error
 	return results, err
 }
+func (obj VideoClips) GetById(id int32) (VideoClips, error) {
+	var videoClips VideoClips
+	err := db.Get().First(&videoClips, id).Error
+	return videoClips, err
+}

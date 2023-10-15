@@ -48,6 +48,12 @@ func main() {
 	router.GET("/highlights/videos/:uuid", service.GetHighlightsVideos)
 	//场次图片
 	router.GET("/videos/img/:uuid", service.GetVideoImg)
+	//时间段筛选回放视频列表
+	router.GET("/video/list", service.GetVideoList)
+	//场次回放视频
+	router.GET("/video/detail/:uuid", service.GetVideoDetails)
+	//ai/集锦视频详情
+	router.GET("/clips/video/detail/:id", service.GetClipsVideoDetail)
 
 	// 视频处理
 	router.POST("/videos", service.StoreVideo)
