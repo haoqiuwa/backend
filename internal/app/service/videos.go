@@ -271,7 +271,9 @@ func (s *Service) GetHighlightsVideos(c *gin.Context) {
 // 获取视频图册
 func (s *Service) GetVideoImg(c *gin.Context) {
 	uuid := c.Param("uuid")
-	data, err := s.EventService.GetVideoImg(uuid)
+	imgTypeStr := c.Param("type")
+	imgType, _ := strconv.Atoi(imgTypeStr)
+	data, err := s.EventService.GetVideoImg(uuid, int32(imgType))
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

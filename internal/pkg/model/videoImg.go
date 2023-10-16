@@ -13,6 +13,7 @@ type VideoImg struct {
 	CreateTime   time.Time `gorm:"column:create_time;comment:创建时间" json:"create_time"`             // 创建时间
 	UpdateTime   time.Time `gorm:"column:update_time;comment:更新时间" json:"update_time"`             // 更新时间
 	RelativeTime int32     `gorm:"column:relative_time;comment:相对视频开始的时间戳" json:"relative_time"`   // 相对视频开始的时间戳
+	ImgType      int32     `gorm:"colum:img_type" json:"img_type"`
 }
 
 // TableName TVideoImg's table name
@@ -25,8 +26,8 @@ func (*VideoImg) Create(obj *VideoImg) (*VideoImg, error) {
 	return obj, err
 }
 
-func (obj *VideoImg) GetByCourtUuid(uuid string) ([]VideoImg, error) {
+func (obj *VideoImg) GetByCourtUuid(uuid string, imgType int32) ([]VideoImg, error) {
 	results := make([]VideoImg, 0)
-	err := db.Get().Table(obj.TableName()).Where("court_uuid = ?", uuid).Find(&results).Error
+	err := db.Get().Table(obj.TableName()).Where("court_uuid = ? img_type = ?", uuid, imgType).Find(&results).Error
 	return results, err
 }

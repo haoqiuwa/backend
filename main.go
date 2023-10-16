@@ -47,7 +47,7 @@ func main() {
 	//场次集锦视频
 	router.GET("/highlights/videos/:uuid", service.GetHighlightsVideos)
 	//场次图片
-	router.GET("/videos/img/:uuid", service.GetVideoImg)
+	router.GET("/videos/img/:uuid/:type", service.GetVideoImg)
 	//时间段筛选回放视频列表
 	router.GET("/video/list", service.GetVideoList)
 	//场次回放视频

@@ -358,8 +358,8 @@ func (s *Service) GetHighlightsVideos(uuid string) ([]model.VideoClips, error) {
 	r, e := s.VideoClipsDao.GetByCourtUuidAndVideoType(uuid, 1)
 	return r, e
 }
-func (s *Service) GetVideoImg(uuid string) ([]model.VideoImg, error) {
-	r, e := s.VideoImgDao.GetByCourtUuid(uuid)
+func (s *Service) GetVideoImg(uuid string, imgType int32) ([]model.VideoImg, error) {
+	r, e := s.VideoImgDao.GetByCourtUuid(uuid, imgType)
 	return r, e
 }
 func (s *Service) GetTimeRange(date int32) ([]int32, error) {
