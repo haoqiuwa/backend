@@ -28,6 +28,6 @@ func (*VideoImg) Create(obj *VideoImg) (*VideoImg, error) {
 
 func (obj *VideoImg) GetByCourtUuid(uuid string, imgType int32) ([]VideoImg, error) {
 	results := make([]VideoImg, 0)
-	err := db.Get().Table(obj.TableName()).Where("court_uuid = ? img_type = ?", uuid, imgType).Find(&results).Error
+	err := db.Get().Table(obj.TableName()).Where("court_uuid = ? and img_type = ?", uuid, imgType).Find(&results).Error
 	return results, err
 }
