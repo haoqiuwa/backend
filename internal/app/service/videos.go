@@ -273,6 +273,7 @@ func (s *Service) GetVideoImg(c *gin.Context) {
 	uuid := c.Param("uuid")
 	imgTypeStr := c.Param("type")
 	imgType, _ := strconv.Atoi(imgTypeStr)
+	log.Println("GetVideoImg uuid  imgTypeStr imgType", uuid, imgTypeStr, imgType)
 	data, err := s.EventService.GetVideoImg(uuid, int32(imgType))
 	if err != nil {
 		c.JSON(500, err.Error())
