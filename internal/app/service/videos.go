@@ -164,6 +164,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		vm.CreateTime = time.Now()
 		vm.UpdateTime = time.Now()
 		vm.ImgPath = eventData.FilePath
+		vm.ImgType = eventData.ImgType
 		log.Println("HandlePushEvent Received EventType3 VideoImg: ", vm)
 		err = s.EventService.StoreVideoImg(vm)
 	default:
