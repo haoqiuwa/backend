@@ -129,6 +129,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		video.TeamBImgPath = eventData.TeamBImgPath
 		video.UUID = eventData.UUID
 		video.HoverImgPath = eventData.HoverImgPath
+		video.Type = 1
 		video.Time = eventData.Time
 		video.Hour = eventData.Hour
 		jsonb, _ := json.Marshal(video)
