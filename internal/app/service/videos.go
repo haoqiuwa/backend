@@ -129,6 +129,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		video.TeamBImgPath = eventData.TeamBImgPath
 		video.UUID = eventData.UUID
 		video.HoverImgPath = eventData.HoverImgPath
+		video.Type = 1
 		video.Time = eventData.Time
 		video.Hour = eventData.Hour
 		jsonb, _ := json.Marshal(video)
@@ -164,6 +165,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		vm.CreateTime = time.Now()
 		vm.UpdateTime = time.Now()
 		vm.ImgPath = eventData.FilePath
+		vm.ImgType = eventData.ImgType
 		log.Println("HandlePushEvent Received EventType3 VideoImg: ", vm)
 		err = s.EventService.StoreVideoImg(vm)
 	default:

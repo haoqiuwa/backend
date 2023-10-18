@@ -39,4 +39,5 @@ type VideoImgEventReq struct {
 	UUID         string `json:"uuid"`
 	RelativeTime int32  `json:"relative_time"`
 	FilePath     string `json:"file_path"`
+	ImgType      int32  `json:"img_type"`
 }
