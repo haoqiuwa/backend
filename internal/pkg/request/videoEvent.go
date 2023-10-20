@@ -28,7 +28,7 @@ type VideoEventReq struct {
 type VideoClipsEventReq struct {
 	UUID         string `json:"uuid"`
 	FilePath     string `json:"file_path"`
-	VideoType    int32  `json:"vide_type"`
+	VideoType    int32  `json:"video_type"`
 	HoverImgPath string `json:"hover_img_path"`
 	Time         int32  `json:"time"`
 	Team         string `json:"team"`
