@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"strconv"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/resp"
@@ -106,6 +107,7 @@ func (s *Service) CollectUserEvent(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
+	log.Println("CollectUserEvent data:", string(body))
 	data, err := s.CollectService.CollectUserEvent(openID, userEvent.FileID, userEvent.EventType, userEvent.FromPage,
 		userEvent.VideoType)
 	if err != nil {
