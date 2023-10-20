@@ -113,8 +113,8 @@ func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, err
 	return len(data) > 0, nil
 }
 
-func (s *Service) GetUserDownloads(openID string, videoType int32) ([]model.Collect, error) {
-	data, err := s.UserEventDao.Gets(&model.UserEvent{OpenID: openID, EventType: 2, VideoType: videoType})
+func (s *Service) GetUserDownloads(openID string, videoType int32, offset int32, pageSize int32) ([]model.Collect, error) {
+	data, err := s.UserEventDao.PageGets(&model.UserEvent{OpenID: openID, EventType: 2, VideoType: videoType}, int(offset), int(pageSize))
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -139,7 +139,7 @@ func (s *Service) GetUserDownloads(openID string, videoType int32) ([]model.Coll
 }
 
 // get pic link by video link, video link like "highlight/2021/01/01/vxxx.
-//mp4" and pic link like "highlight/2021/01/01/pxxx.PNG"
+// mp4" and pic link like "highlight/2021/01/01/pxxx.PNG"
 func videoToPicLink(videoLink string) string {
 	// 分割视频链接，获取最后一部分
 	parts := strings.Split(videoLink, "/")

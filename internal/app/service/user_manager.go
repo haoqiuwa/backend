@@ -11,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const pageSize int32 = 10
+
 // ToggleCollectVideo 收藏视频
 func (s *Service) ToggleCollectVideo(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
@@ -68,8 +70,14 @@ func (s *Service) GetUserDownloads(c *gin.Context) {
 		return
 	}
 	videoType := c.Query("video_type")
+	page := c.Query("page")
+	if page == "" {
+		page = "1"
+	}
 	videoTypeInt, _ := strconv.Atoi(videoType)
-	data, err := s.CollectService.GetUserDownloads(openID, int32(videoTypeInt))
+	pageInt, _ := strconv.Atoi(page)
+	offset := (int32(pageInt) - 1) * pageSize
+	data, err := s.CollectService.GetUserDownloads(openID, int32(videoTypeInt), offset, pageSize)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

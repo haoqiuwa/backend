@@ -36,3 +36,9 @@ func (obj *UserEvent) Gets(userEvent *UserEvent) ([]UserEvent, error) {
 	err := db.Get().Table(obj.TableName()).Where(userEvent).Find(&results).Error
 	return results, err
 }
+
+func (obj *UserEvent) PageGets(userEvent *UserEvent, offset int, pageSize int) ([]UserEvent, error) {
+	results := make([]UserEvent, 0)
+	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where(userEvent).Find(&results).Error
+	return results, err
+}
