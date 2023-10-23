@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"wxcloudrun-golang/internal/pkg/model"
+	"wxcloudrun-golang/internal/pkg/request"
 	"wxcloudrun-golang/internal/pkg/resp"
 
 	"github.com/gin-gonic/gin"
@@ -69,8 +70,14 @@ func (s *Service) UpdateVipCount(c *gin.Context) {
 		return
 	}
 	body, _ := io.ReadAll(c.Request.Body)
-	order := &model.Vip{}
+	order := &request.UpdateVipCountCnt{}
 	err := json.Unmarshal(body, order)
+	if order.Count < 0 && order.FilePath != "" {
+		data, _ := s.CollectService.GetUserDownloadStatus(openID, order.FilePath)
+		if data {
+			c.JSON(200, resp.ToStruct(data, err))
+		}
+	}
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
