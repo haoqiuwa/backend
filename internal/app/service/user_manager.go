@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const pageSize int32 = 10
+const pageSize int32 = 100
 
 // ToggleCollectVideo 收藏视频
 func (s *Service) ToggleCollectVideo(c *gin.Context) {
