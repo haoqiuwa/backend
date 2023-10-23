@@ -53,6 +53,10 @@ func (s *Service) GetUserDownload(c *gin.Context) {
 // GetUserDownloadStatus 获取用户下载状态
 func (s *Service) GetUserDownloadStatus(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
+	if openID == "" {
+		c.JSON(400, "请先登录")
+		return
+	}
 	videoID := c.Query("file_id")
 	data, err := s.CollectService.GetUserDownloadStatus(openID, videoID)
 	if err != nil {
