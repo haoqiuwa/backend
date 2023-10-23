@@ -41,9 +41,9 @@ func (obj *UserEvent) PageGets(openId string, queryType string, offset int, page
 	results := make([]UserEvent, 0)
 	var videoTypes []int32
 	if queryType == "video" {
-		videoTypes = append(videoTypes, 1, 2, 3, 4, 5)
+		videoTypes = append(videoTypes, 1, 2, 3, 4, 5) // 2 回放 3 比赛回放 4 比赛集锦 5 ai video
 	} else if queryType == "img" {
-		videoTypes = append(videoTypes, 6, 7)
+		videoTypes = append(videoTypes, 6, 7) // ai图 6 高清图 7
 	}
 	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where("event_type=2 and open_id = ? and video_type in ?", openId, videoTypes).Find(&results).Error
 	return results, err
