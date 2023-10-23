@@ -37,8 +37,14 @@ func (obj *UserEvent) Gets(userEvent *UserEvent) ([]UserEvent, error) {
 	return results, err
 }
 
-func (obj *UserEvent) PageGets(userEvent *UserEvent, offset int, pageSize int) ([]UserEvent, error) {
+func (obj *UserEvent) PageGets(openId string, queryType string, offset int, pageSize int) ([]UserEvent, error) {
 	results := make([]UserEvent, 0)
-	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where(userEvent).Find(&results).Error
+	var videoTypes []int32
+	if queryType == "video" {
+		videoTypes = append(videoTypes, 0, 1, 2, 3, 4, 5)
+	} else if queryType == "img" {
+		videoTypes = append(videoTypes, 6)
+	}
+	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where("open_id = ? and videoType in ?", openId, videoTypes).Find(&results).Error
 	return results, err
 }

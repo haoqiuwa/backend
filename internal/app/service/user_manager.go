@@ -69,15 +69,17 @@ func (s *Service) GetUserDownloads(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	videoType := c.Query("video_type")
+	queryType := c.Query("query_type") // 前端传递
 	page := c.Query("page")
 	if page == "" {
 		page = "1"
 	}
-	videoTypeInt, _ := strconv.Atoi(videoType)
+	if queryType == "" {
+		queryType = "video"
+	}
 	pageInt, _ := strconv.Atoi(page)
 	offset := (int32(pageInt) - 1) * pageSize
-	data, err := s.CollectService.GetUserDownloads(openID, int32(videoTypeInt), offset, pageSize)
+	data, err := s.CollectService.GetUserDownloads(openID, queryType, offset, pageSize)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

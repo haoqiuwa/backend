@@ -113,8 +113,8 @@ func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, err
 	return len(data) > 0, nil
 }
 
-func (s *Service) GetUserDownloads(openID string, videoType int32, offset int32, pageSize int32) ([]model.Collect, error) {
-	data, err := s.UserEventDao.PageGets(&model.UserEvent{OpenID: openID, EventType: 2, VideoType: videoType}, int(offset), int(pageSize))
+func (s *Service) GetUserDownloads(openID string, queryType string, offset int32, pageSize int32) ([]model.Collect, error) {
+	data, err := s.UserEventDao.PageGets(openID, queryType, int(offset), int(pageSize))
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

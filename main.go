@@ -21,8 +21,8 @@ func main() {
 
 	// 用户管理
 	router.GET("/user/collects", service.GetCollectVideos)
-	router.GET("/user/download", service.GetUserDownload) //查看有无下载次数
-	router.GET("/user/downloads", service.GetUserDownloads)
+	router.GET("/user/download", service.GetUserDownload)   //查看有无下载次数
+	router.GET("/user/downloads", service.GetUserDownloads) // 查看下载列表
 	router.POST("/survey", service.CollectSurvey)
 	router.GET("/user/download_status", service.GetUserDownloadStatus) //查看有无下载记录根据field_id
 
