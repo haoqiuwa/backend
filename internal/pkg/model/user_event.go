@@ -41,10 +41,10 @@ func (obj *UserEvent) PageGets(openId string, queryType string, offset int, page
 	results := make([]UserEvent, 0)
 	var videoTypes []int32
 	if queryType == "video" {
-		videoTypes = append(videoTypes, 0, 1, 2, 3, 4, 5)
+		videoTypes = append(videoTypes, 1, 2, 3, 4, 5)
 	} else if queryType == "img" {
 		videoTypes = append(videoTypes, 6)
 	}
-	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where("open_id = ? and video_type in ?", openId, videoTypes).Find(&results).Error
+	err := db.Get().Table(obj.TableName()).Offset(offset).Limit(pageSize).Where("event_type=2 and open_id = ? and video_type in ?", openId, videoTypes).Find(&results).Error
 	return results, err
 }
