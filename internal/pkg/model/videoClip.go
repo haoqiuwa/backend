@@ -23,6 +23,11 @@ func (*VideoClips) TableName() string {
 	return "t_video_clips"
 }
 
+func (obj *VideoClips) Get(videoClips *VideoClips) (*VideoClips, error) {
+	result := new(VideoClips)
+	err := db.Get().Table(obj.TableName()).Where(videoClips).First(result).Error
+	return result, err
+}
 func (*VideoClips) Create(obj *VideoClips) (*VideoClips, error) {
 	err := db.Get().Create(obj).Error
 	return obj, err
