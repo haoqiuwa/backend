@@ -112,7 +112,6 @@ func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, err
 		fmt.Println(err)
 		return false, err
 	}
-	log.Println("GetUserDownloadStatus data:", data)
 	return len(data) > 0, nil
 }
 

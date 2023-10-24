@@ -58,6 +58,10 @@ func (s *Service) GetUserDownloadStatus(c *gin.Context) {
 		return
 	}
 	videoID := c.Query("file_id")
+	if videoID == "" {
+		c.JSON(400, resp.ToStruct("参数错误", nil))
+		return
+	}
 	data, err := s.CollectService.GetUserDownloadStatus(openID, videoID)
 	if err != nil {
 		c.JSON(500, err.Error())
