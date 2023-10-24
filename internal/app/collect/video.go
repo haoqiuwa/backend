@@ -2,6 +2,7 @@ package collect
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
 	"time"
@@ -105,11 +106,13 @@ func (s *Service) GetUserDownload(openID string) (int32, error) {
 }
 
 func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, error) {
+	log.Printf("GetUserDownloadStatus openID:%s ,fileID:%s", openID, fileID)
 	data, err := s.UserEventDao.Gets(&model.UserEvent{OpenID: openID, FileID: fileID})
 	if err != nil {
 		fmt.Println(err)
 		return false, err
 	}
+	log.Println("GetUserDownloadStatus data:", data)
 	return len(data) > 0, nil
 }
 
