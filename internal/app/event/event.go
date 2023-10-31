@@ -363,7 +363,7 @@ func (s *Service) GetVideoImg(uuid string, imgType int32) ([]model.VideoImg, err
 	return r, e
 }
 func (s *Service) GetTimeRange(date int32) ([]int32, error) {
-	r, e := s.VideoDao.GetDistinctHours(date)
+	r, e := s.VideoDao.GetTimeRange(date)
 	return r, e
 }
 func (s *Service) GetVideoList(date int32, courtID int32, hour int32) ([]*model.Video, error) {

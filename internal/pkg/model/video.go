@@ -65,6 +65,15 @@ func (obj *Video) GetDistinctHours(date int32) ([]int32, error) {
 	return results, err
 }
 
+func (obj *Video) GetTimeRange(date int32) ([]int32, error) {
+	results := make([]int32, 0)
+	// get hours order by desc
+	err := db.Get().Table(obj.TableName()).Where("date = ? and type =100",
+		date).Order("hour desc").Pluck("distinct hour",
+		&results).Error
+	return results, err
+}
+
 func (obj *Video) GetVideos(date int32, courtID int32, hour int32, videoType int32) ([]*Video, error) {
 	results := make([]*Video, 0)
 	err := db.Get().Table(obj.TableName()).Where(
