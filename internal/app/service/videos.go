@@ -92,6 +92,7 @@ func (s *Service) StoreVideo(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+// 添加日志出发发布
 // 处理硬件和算法端push过来的事件
 func (s *Service) HandlePushEvent(c *gin.Context) {
 	body, _ := io.ReadAll(c.Request.Body)
