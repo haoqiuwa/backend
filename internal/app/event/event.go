@@ -83,7 +83,7 @@ func (s *Service) GetEvents(courtID string, date int32) ([]Event, error) {
 }
 
 func (s *Service) GetVideos(date int32, courtID int32, hour int32, openID string) (*EventDetail, error) {
-	result, err := s.getVideosByType(date, courtID, hour, openID, 1)
+	result, err := s.getVideosByType(date, courtID, hour, openID, 100)
 	return result, err
 }
 
