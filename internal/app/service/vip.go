@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/request"
 	"wxcloudrun-golang/internal/pkg/resp"
@@ -13,6 +14,7 @@ import (
 // GetVipCount	获取vip数量
 func (s *Service) GetVipCount(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
+	log.Println("GetVipCount openID:", openID)
 	if openID == "" {
 		c.JSON(400, "请先登录")
 		return
