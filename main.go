@@ -18,6 +18,7 @@ func main() {
 	// 用户信息
 	router.POST("/auth/login", service.WeChatLogin)
 	router.POST("/user/court", service.StoreCourt)
+	router.POST("/user/openid", service.UserOpenId)
 
 	// 用户管理
 	router.GET("/user/collects", service.GetCollectVideos)
