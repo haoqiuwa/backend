@@ -11,6 +11,7 @@ type EventReq struct {
 // 场次主视频
 type VideoEventReq struct {
 	UUID           string `json:"uuid"`
+	VenueId        int32  `json:"venue_id"`
 	Court          int32  `json:"court"`
 	FilePath       string `json:"file_path"`
 	FileName       string `json:"file_name"`
