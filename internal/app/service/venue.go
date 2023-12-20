@@ -9,7 +9,7 @@ import (
 
 func (s *Service) GetVenues(c *gin.Context) {
 	r, err := s.VenueService.GetVenues()
-	log.Fatalln("GetVenues r", r)
+	log.Println("GetVenues r", r)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
