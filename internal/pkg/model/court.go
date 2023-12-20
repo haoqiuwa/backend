@@ -6,13 +6,9 @@ import (
 )
 
 type Court struct {
-	ID          int32     `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
-	Name        string    `json:"name" gorm:"column:name;type:varchar(255);not null;default:'';comment:'场馆名称'"`
-	Location    string    `json:"location" gorm:"column:location;type:varchar(255);not null;default:'';comment:'场馆地址'"`
-	Latitude    float64   `json:"latitude" gorm:"column:latitude;type:decimal(10,6);not null;default:0.000000;comment:'纬度'"`
-	Longitude   float64   `json:"longitude" gorm:"column:longitude;type:decimal(10,6);not null;default:0.000000;comment:'经度'"`
-	PicURL      string    `json:"pic_url" gorm:"column:pic_url;type:varchar(255);not null;default:'';comment:'场馆图片'"`
-	Info        string    `json:"info" gorm:"column:info;type:varchar(255);not null;default:'';comment:'场馆简介'"`
+	ID          int64     `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
+	CourtName   string    `json:"court_name" gorm:"column:court_name;type:varchar(255);default:'';comment:'场馆名称'"`
+	VenueId     int64     `json:"venue_id" gorm:"column:venue_id;not null;comment:'场馆id'"`
 	CreatedTime time.Time `json:"created_time" gorm:"column:created_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'创建时间'"`
 	UpdatedTime time.Time `json:"updated_time" gorm:"column:updated_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'更新时间'"`
 }

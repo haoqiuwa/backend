@@ -7,11 +7,13 @@ import (
 	"wxcloudrun-golang/internal/app/pay"
 	"wxcloudrun-golang/internal/app/recommend"
 	"wxcloudrun-golang/internal/app/user"
+	"wxcloudrun-golang/internal/app/venue"
 	"wxcloudrun-golang/internal/app/vip"
 )
 
 type Service struct {
 	UserService      *user.Service
+	VenueService     *venue.Service
 	CourtService     *court.Service
 	EventService     *event.Service
 	CollectService   *collect.Service

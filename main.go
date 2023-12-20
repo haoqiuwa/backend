@@ -63,10 +63,8 @@ func main() {
 	router.POST("/user/event", service.CollectUserEvent)
 
 	// 暂未启用 场地管理
+	router.GET("/venues", service.GetVenues)
 	router.GET("/courts", service.GetCounts)
-	router.GET("/courts/:id", service.GetCountInfo)
-	router.GET("/courts/:id/judge", service.JudgeLocation)
-	router.GET("/recommend/videos", service.GetRecommendVideos)
 	// 8080 port
 	log.Fatal(router.Run())
 }
