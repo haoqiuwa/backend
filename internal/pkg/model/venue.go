@@ -17,8 +17,8 @@ type Venue struct {
 	VenuePhone  string    `json:"venue_phone" gorm:"column:venue_phone;type:varchar(255);default:'';comment:'场馆联系电话'"`
 	CreateUser  string    `json:"create_user" gorm:"column:create_user;type:varchar(255);default:'';comment:'创建人'"`
 	UpdateUser  string    `json:"update_user" gorm:"column:update_user;type:varchar(255);default:'';comment:'更新人'"`
-	VenueStatus string    `json:"venue_status" gorm:"column:venue_status;type:tinyint(1);default:'1';comment:'场馆状态"`
-	IsDel       string    `json:"is_del" gorm:"column:is_del;type:tinyint(1);default:'1';comment:'是否删除'"`
+	VenueStatus bool      `json:"venue_status" gorm:"column:venue_status;type:tinyint(1);default:1;comment:'场馆状态"`
+	IsDel       bool      `json:"is_del" gorm:"column:is_del;type:tinyint(1);default:1;comment:'是否删除'"`
 	CreatedTime time.Time `json:"created_time" gorm:"column:created_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'创建时间'"`
 	UpdatedTime time.Time `json:"updated_time" gorm:"column:updated_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'更新时间'"`
 }
