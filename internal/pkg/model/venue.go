@@ -25,7 +25,7 @@ type Venue struct {
 
 // TableName get sql table name.获取数据库名字
 func (obj *Venue) TableName() string {
-	return "t_court"
+	return "t_venue"
 }
 
 // Create 创建记录
