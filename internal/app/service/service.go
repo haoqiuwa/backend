@@ -31,5 +31,6 @@ func NewService() *Service {
 		RecommendService: recommend.NewService(),
 		VipService:       vip.NewService(),
 		PayService:       pay.NewService(),
+		VenueService:     venue.NewService(),
 	}
 }
