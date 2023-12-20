@@ -8,6 +8,12 @@ type Service struct {
 	venueDao *model.Venue
 }
 
+func NewService() *Service {
+	return &Service{
+		venueDao: &model.Venue{},
+	}
+}
+
 func (s *Service) GetVenues() ([]model.Venue, error) {
 	return s.venueDao.Gets(&model.Venue{})
 }
