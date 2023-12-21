@@ -119,6 +119,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		log.Println("HandlePushEvent Received EventType1:", eventData)
 		video := &model.Video{}
 		video.Court = eventData.Court
+		video.VenueId = eventData.VenueId
 		video.CreatedTime = time.Now()
 		video.UpdatedTime = time.Now()
 		video.Date = eventData.Date
@@ -169,6 +170,30 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		vm.ImgType = eventData.ImgType
 		log.Println("HandlePushEvent Received EventType3 VideoImg: ", vm)
 		err = s.EventService.StoreVideoImg(vm)
+	case 4:
+		var eventData request.VideoRecordEventReq
+		err = toStruct(jsonb, &eventData)
+		if nil != err {
+			c.JSON(400, err.Error())
+			return
+		}
+		log.Println("HandlePushEvent Received EventType4:", eventData)
+		video := &model.VideoRecord{}
+		video.Court = eventData.Court
+		video.VenueId = eventData.VenueId
+		video.CreatedTime = time.Now()
+		video.UpdatedTime = time.Now()
+		video.Date = eventData.Date
+		video.FilePath = eventData.FilePath
+		video.StartTime = eventData.StartTimestamp
+		video.EndTime = eventData.EndTimestamp
+		video.UUID = eventData.UUID
+		video.HoverImgPath = eventData.HoverImgPath
+		video.Time = eventData.Time
+		video.Hour = eventData.Hour
+		jsonb, _ := json.Marshal(video)
+		log.Println("json:", string(jsonb))
+		_, err = s.VideoRecordService.Create(video)
 	default:
 		c.JSON(400, err.Error())
 		return

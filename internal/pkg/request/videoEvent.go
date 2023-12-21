@@ -42,3 +42,17 @@ type VideoImgEventReq struct {
 	FilePath     string `json:"file_path"`
 	ImgType      int32  `json:"img_type"`
 }
+
+type VideoRecordEventReq struct {
+	UUID           string `json:"uuid"`
+	ID             int32  `json:"id"`
+	FilePath       string `json:"file_path"`
+	Date           int32  `json:"date"`
+	Time           int32  `json:"time"`
+	VenueId        int32  `gorm:"column:venue_id" json:"venue_id"`
+	Court          int32  `json:"court"`
+	Hour           int32  `json:"hour"`
+	HoverImgPath   string `json:"hover_img_path"`
+	StartTimestamp int64  `json:"start_timestamp"`
+	EndTimestamp   int64  `json:"end_timestamp"`
+}
