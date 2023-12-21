@@ -368,6 +368,8 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		tr := TimeRangeRes{}
 		tr.CourtId = int32(courtId)
 		tr.VenueId = int32(venueId)
+		tr.Date = int32(date)
+		tr.Hour = v
 		vs, err := s.EventService.GetVideoList(int32(date), int32(courtId), v, int32(venueId))
 		if err != nil {
 			tr.VideoCnt = 0
