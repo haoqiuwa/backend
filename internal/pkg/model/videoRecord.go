@@ -47,3 +47,12 @@ func (obj *VideoRecord) Update(vr *VideoRecord) (*VideoRecord, error) {
 	err := db.Get().Table(obj.TableName()).Where("id = ?", vr.ID).Updates(vr).Error
 	return vr, err
 }
+
+func (obj *VideoRecord) GetVideoRecords(venueId int32, courtId int32, date int32, hour int32) ([]*VideoRecord, error) {
+	results := make([]*VideoRecord, 0)
+	err := db.Get().Table(obj.TableName()).Where(
+		"date = ? and court = ? and hour = ? and venue_id = ? and type=100", date,
+		courtId,
+		hour, venueId).Order("id desc").Find(&results).Error
+	return results, err
+}
