@@ -189,7 +189,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		}
 		log.Println("HandlePushEvent Received EventType4:", eventData)
 		video := &model.VideoRecord{}
-		video.Court = eventData.Court
+		video.CourtId = eventData.Court
 		video.VenueId = eventData.VenueId
 		video.CreatedTime = time.Now()
 		video.UpdatedTime = time.Now()
