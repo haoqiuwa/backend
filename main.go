@@ -53,6 +53,7 @@ func main() {
 	router.GET("/videos/img/:uuid/:type", service.GetVideoImg)
 	//时间段筛选回放视频列表
 	router.GET("/video/list", service.GetVideoList)
+	router.GET("/video/recods", service.GetVideoRecords)
 	//场次回放视频
 	router.GET("/video/detail/:uuid", service.GetVideoDetails)
 	//ai/集锦视频详情
