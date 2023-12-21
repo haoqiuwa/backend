@@ -362,7 +362,8 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 			return data[i] > data[j]
 		})
 	}
-	res := []TimeRangeRes{}
+	log.Println("data", data)
+	res := make([]TimeRangeRes, 0)
 	for _, v := range data {
 		tr := TimeRangeRes{}
 		tr.CourtId = int32(courtId)
@@ -381,7 +382,13 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 			}
 			tr.VideoClipsCnt = int32(len(c))
 		}
-		s.VideoRecordService.GetVideoRecords(int32(venueId), int32(courtId), int32(date), v)
+		records, err := s.VideoRecordService.GetVideoRecords(int32(venueId), int32(courtId), int32(date), v)
+		if nil != err {
+			tr.VideoRecordCnt = 0
+		} else {
+			tr.VideoRecordCnt = int32(len(records))
+		}
+		res = append(res, tr)
 	}
 	c.JSON(200, resp.ToStruct(res, err))
 }
