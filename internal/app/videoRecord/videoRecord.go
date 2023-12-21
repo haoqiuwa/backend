@@ -1,6 +1,7 @@
 package videorecord
 
 import (
+	"log"
 	"wxcloudrun-golang/internal/pkg/model"
 )
 
@@ -20,6 +21,7 @@ func (s *Service) GetVideoRecords(venueId int32, courtId int32, date int32, hour
 	vr.Date = date
 	vr.VenueId = venueId
 	vr.Hour = hour
+	log.Println("GetVideoRecords", vr)
 	return s.videorecordDao.Gets(vr)
 }
 
