@@ -195,8 +195,8 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		video.UpdatedTime = time.Now()
 		video.Date = eventData.Date
 		video.FilePath = eventData.FilePath
-		video.StartTime = eventData.StartTimestamp
-		video.EndTime = eventData.EndTimestamp
+		video.StartTimestamp = eventData.StartTimestamp
+		video.EndTimestamp = eventData.EndTimestamp
 		video.UUID = eventData.UUID
 		video.HoverImgPath = eventData.HoverImgPath
 		video.Time = eventData.Time
