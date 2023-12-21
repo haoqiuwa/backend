@@ -43,6 +43,8 @@ func main() {
 	router.GET("/aigc/contents", service.GetAIContents)
 	//时间段筛选
 	router.GET("/time/range", service.TimeRange)
+	router.GET("/time/range/v1", service.TimeRangeV1)
+
 	//场次ai视频
 	router.GET("/ai/videos/:uuid", service.GetAiVideos)
 	//场次集锦视频

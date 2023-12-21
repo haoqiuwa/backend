@@ -74,7 +74,6 @@ func (obj *Video) GetTimeRange(date int32) ([]int32, error) {
 		&results).Error
 	return results, err
 }
-
 func (obj *Video) GetVideos(date int32, courtID int32, hour int32, videoType int32) ([]*Video, error) {
 	results := make([]*Video, 0)
 	err := db.Get().Table(obj.TableName()).Where(
@@ -84,12 +83,12 @@ func (obj *Video) GetVideos(date int32, courtID int32, hour int32, videoType int
 	return results, err
 }
 
-func (obj *Video) GetVideoList(date int32, courtID int32, hour int32) ([]*Video, error) {
+func (obj *Video) GetVideoList(date int32, courtID int32, hour int32, venueId int32) ([]*Video, error) {
 	results := make([]*Video, 0)
 	err := db.Get().Table(obj.TableName()).Where(
-		"date = ? and court = ? and hour = ? and type=100", date,
+		"date = ? and court = ? and hour = ? and venue_id = ? and type=100", date,
 		courtID,
-		hour).Order("id desc").Find(&results).Error
+		hour, venueId).Order("id desc").Find(&results).Error
 	return results, err
 }
 

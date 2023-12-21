@@ -14,6 +14,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type TimeRangeRes struct {
+	VenueId        int32 `json:"venue_id"`
+	CourtId        int32 `json:"court_id"`
+	Date           int32 `json:"date"`
+	Hour           int32 `json:"hour"`
+	VideoCnt       int32 `json:"video_cnt"`
+	VideoRecordCnt int32 `json:"video_record_cnt"`
+	VideoClipsCnt  int32 `json:"video_clips_cnt"`
+}
+
 // GetEvents 获取用户所属事件的视频
 func (s *Service) GetEvents(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
@@ -327,6 +337,55 @@ func (s *Service) TimeRange(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
+func (s *Service) TimeRangeV1(c *gin.Context) {
+	dateStr := c.Query("date")
+	venueIdStr := c.Query("venueId")
+	courtIdStr := c.Query("courtId")
+	date, err := strconv.Atoi(dateStr)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	venueId, err := strconv.Atoi(venueIdStr)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	courtId, err := strconv.Atoi(courtIdStr)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	data, err := s.EventService.GetTimeRange(int32(date))
+	if nil == err {
+		sort.Slice(data, func(i, j int) bool {
+			return data[i] > data[j]
+		})
+	}
+	res := []TimeRangeRes{}
+	for _, v := range data {
+		tr := TimeRangeRes{}
+		tr.CourtId = int32(courtId)
+		tr.VenueId = int32(venueId)
+		vs, err := s.EventService.GetVideoList(int32(date), int32(courtId), v, int32(venueId))
+		if err != nil {
+			tr.VideoCnt = 0
+			continue
+		}
+		tr.VideoCnt = int32(len(vs))
+		for _, vv := range vs {
+			c, err := s.EventService.VideoClipsDao.GetByCourtUuid(vv.UUID)
+			if err != nil {
+				tr.VideoClipsCnt = 0
+				continue
+			}
+			tr.VideoClipsCnt = int32(len(c))
+		}
+		s.VideoRecordService.GetVideoRecords(int32(venueId), int32(courtId), int32(date), v)
+	}
+	c.JSON(200, resp.ToStruct(res, err))
+}
+
 func (s *Service) GetVideoList(c *gin.Context) {
 	dateStr := c.Query("date")
 	date, err := strconv.Atoi(dateStr)
@@ -346,7 +405,13 @@ func (s *Service) GetVideoList(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	data, err := s.EventService.GetVideoList(int32(date), int32(courtId), int32(hour))
+	venueIdStr := c.Query("venueId")
+	venueId, err := strconv.Atoi(venueIdStr)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	data, err := s.EventService.GetVideoList(int32(date), int32(courtId), int32(hour), int32(venueId))
 	c.JSON(200, resp.ToStruct(data, err))
 }
 

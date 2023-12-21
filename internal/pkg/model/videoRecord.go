@@ -26,24 +26,24 @@ func (obj *VideoRecord) TableName() string {
 	return "t_video_record"
 }
 
-func (obj *VideoRecord) Create(video *VideoRecord) (*VideoRecord, error) {
-	err := db.Get().Create(video).Error
-	return video, err
+func (obj *VideoRecord) Create(vr *VideoRecord) (*VideoRecord, error) {
+	err := db.Get().Create(vr).Error
+	return vr, err
 }
 
-func (obj *VideoRecord) Get(video *VideoRecord) (*VideoRecord, error) {
+func (obj *VideoRecord) Get(vr *VideoRecord) (*VideoRecord, error) {
 	result := new(VideoRecord)
-	err := db.Get().Table(obj.TableName()).Where(video).First(result).Error
+	err := db.Get().Table(obj.TableName()).Where(vr).First(result).Error
 	return result, err
 }
 
-func (obj *VideoRecord) Gets(video *VideoRecord) ([]VideoRecord, error) {
+func (obj *VideoRecord) Gets(vr *VideoRecord) ([]VideoRecord, error) {
 	results := make([]VideoRecord, 0)
-	err := db.Get().Table(obj.TableName()).Where(video).Find(&results).Error
+	err := db.Get().Table(obj.TableName()).Where(vr).Find(&results).Error
 	return results, err
 }
 
-func (obj *VideoRecord) Update(video *VideoRecord) (*VideoRecord, error) {
-	err := db.Get().Table(obj.TableName()).Where("id = ?", video.ID).Updates(video).Error
-	return video, err
+func (obj *VideoRecord) Update(vr *VideoRecord) (*VideoRecord, error) {
+	err := db.Get().Table(obj.TableName()).Where("id = ?", vr.ID).Updates(vr).Error
+	return vr, err
 }

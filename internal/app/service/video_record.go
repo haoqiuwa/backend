@@ -8,7 +8,7 @@ import (
 )
 
 func (s *Service) GetVideoRecords(c *gin.Context) {
-	r, err := s.VideoRecordService.GetVideoRecords()
+	r, err := s.VideoRecordService.GetVideoRecords(1, 1, 20231018, 23) //todo
 	log.Println("GetVideoRecords r", r)
 	if err != nil {
 		c.JSON(500, err.Error())
