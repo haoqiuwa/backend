@@ -33,7 +33,7 @@ func (s *Service) GetVideoRecords(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	r, err := s.VideoRecordService.GetVideoRecords(int32(date), int32(courtId), int32(hour), int32(venueId))
+	r, err := s.VideoRecordService.GetVideoRecords(int32(venueId), int32(courtId), int32(date), int32(hour))
 	log.Println("GetVideoRecords r", r)
 	if err != nil {
 		c.JSON(500, err.Error())
