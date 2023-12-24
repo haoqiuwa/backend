@@ -55,3 +55,9 @@ func (obj *Court) GetsWithLimit(count *Court, limit int32) ([]Court, error) {
 	err := db.Get().Table(obj.TableName()).Where(count).Limit(int(limit)).Find(&results).Error
 	return results, err
 }
+
+func (obj *Court) GetByVenueId(id int64) ([]Court, error) {
+	results := make([]Court, 0)
+	err := db.Get().Table(obj.TableName()).Where("venue_id=?", id).Find(&results).Error
+	return results, err
+}
