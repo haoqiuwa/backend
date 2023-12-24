@@ -29,18 +29,34 @@ func (s *Service) GetUserDownloadList(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
+	pageStr := c.Query("page")
+	if pageStr == "" {
+		pageStr = "1"
+	}
 	// rt := c.Query("resource_type")
 	// resourceType, err := strconv.Atoi(rt)
 	// if nil != err {
 	// 	c.JSON(400, "参数错误")
 	// 	return
 	// }
-	r, err := s.DownloadRecordService.GetByOpenId(openID)
+	page, err := strconv.Atoi(pageStr)
+	if nil != err {
+		c.JSON(400, "参数错误")
+		return
+	}
+	offset := (int32(page) - 1) * pageSize
+	pageInfo := resp.PageInfo{}
+	pageInfo.Page = int32(page)
+	r, err := s.DownloadRecordService.GetByOpenIdPage(openID, offset, pageSize)
 	if nil != err {
 		c.JSON(200, "暂无数据")
 		return
 	}
-	c.JSON(200, resp.ToStruct(r, err))
+	if len(r) == int(pageSize) {
+		pageInfo.HasMore = true
+	}
+	pageInfo.PageData = r
+	c.JSON(200, resp.ToStruct(pageInfo, err))
 }
 
 func (s *Service) GetDownloadRecordById(c *gin.Context) {
@@ -202,7 +218,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		return
 	}
 	if config.PriceConfig.VideoRecordPrice > vp.Count {
-		c.JSON(500, "钻石不足")
+		c.JSON(200, resp.Fail(5000, "钻石不足"))
 		return
 	}
 	r, err := s.DownloadRecordService.Create(&dr)

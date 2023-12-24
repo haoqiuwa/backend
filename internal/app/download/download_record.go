@@ -24,8 +24,8 @@ func (s *Service) GetByOpenIdAndType(openId string, resourceType int32) ([]model
 	return s.DownloadRecordDao.GetByOpenIdAndType(openId, resourceType)
 }
 
-func (s *Service) GetByOpenId(openId string) ([]model.DownloadRecord, error) {
-	return s.DownloadRecordDao.GetByOpenId(openId)
+func (s *Service) GetByOpenIdPage(openId string, offset, page int32) ([]model.DownloadRecord, error) {
+	return s.DownloadRecordDao.GetByOpenIdPage(openId, offset, page)
 }
 
 // &model.DownloadRecord{
