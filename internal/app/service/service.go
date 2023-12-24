@@ -1,6 +1,7 @@
 package service
 
 import (
+	"wxcloudrun-golang/internal/app/activity"
 	"wxcloudrun-golang/internal/app/collect"
 	"wxcloudrun-golang/internal/app/court"
 	"wxcloudrun-golang/internal/app/event"
@@ -22,6 +23,7 @@ type Service struct {
 	RecommendService   *recommend.Service
 	VipService         *vip.Service
 	PayService         *pay.Service
+	ActivityService    *activity.Service
 }
 
 func NewService() *Service {
@@ -35,5 +37,6 @@ func NewService() *Service {
 		PayService:         pay.NewService(),
 		VenueService:       venue.NewService(),
 		VideoRecordService: videorecord.NewService(),
+		ActivityService:    activity.NewService(),
 	}
 }
