@@ -9,7 +9,9 @@ type Service struct {
 }
 
 func NewService() *Service {
-	return &Service{}
+	return &Service{
+		DownloadRecordDao: &model.DownloadRecord{},
+	}
 }
 
 func (s *Service) Create(dr *model.DownloadRecord) (*model.DownloadRecord, error) {
