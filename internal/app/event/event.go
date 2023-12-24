@@ -23,9 +23,11 @@ type Service struct {
 
 func NewService() *Service {
 	return &Service{
-		VideoDao:   &model.Video{},
-		CourtDao:   &model.Court{},
-		CollectDao: &model.Collect{},
+		VideoDao:      &model.Video{},
+		CourtDao:      &model.Court{},
+		CollectDao:    &model.Collect{},
+		VideoClipsDao: &model.VideoClips{},
+		VideoImgDao:   &model.VideoImg{},
 	}
 }
 
