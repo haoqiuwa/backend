@@ -233,11 +233,13 @@ func (s *Service) UserDownload(c *gin.Context) {
 	}
 	r, err := s.DownloadRecordService.Create(&dr)
 	if err != nil {
+		log.Println("DownloadRecordService.Create err", err)
 		c.JSON(500, err.Error())
 		return
 	}
 	_, err = s.VipService.UpdateRemainingCount(openID, -r.CastDiamond)
 	if err != nil {
+		log.Println("VipService.UpdateRemainingCount err", err)
 		c.JSON(500, err.Error())
 		return
 	}
