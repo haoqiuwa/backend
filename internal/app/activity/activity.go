@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"log"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
 )
@@ -28,11 +29,14 @@ func (s *Service) CreateActivityUser(openId string, activityId int32, useId int3
 }
 
 func (s *Service) FindActivityByIdAndOpenId(id int32, openId string) (*model.Activity, error) {
+	log.Println("FindActivityByIdAndOpenId id openId", id, openId)
 	a, err := s.ActivityDao.FindById(id)
+	log.Println("FindActivityByIdAndOpenId activity", a)
 	if nil != err {
 		return nil, err
 	}
 	au, err := s.ActivityUserDao.FindByOpenIdAndActivityId(openId, id)
+	log.Println("FindActivityByIdAndOpenId activity user ", au)
 	if nil != au {
 		return nil, err
 	}

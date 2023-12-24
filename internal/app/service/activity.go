@@ -13,7 +13,7 @@ func (s *Service) GetActivity(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
 	a, err := s.ActivityService.FindActivityByIdAndOpenId(id, openID)
 	if err != nil {
-		c.JSON(200, nil)
+		c.JSON(200, "暂无活动")
 		return
 	}
 	c.JSON(200, resp.ToStruct(a, err))
