@@ -37,7 +37,7 @@ func (s *Service) FindActivityByIdAndOpenId(id int32, openId string) (*model.Act
 	}
 	au, err := s.ActivityUserDao.FindByOpenIdAndActivityId(openId, id)
 	log.Println("FindActivityByIdAndOpenId activity user ", au)
-	if nil != au {
+	if au.ActivityID > 0 {
 		return nil, err
 	}
 	return a, nil
