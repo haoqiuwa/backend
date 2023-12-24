@@ -100,7 +100,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 	}
 	log.Println("UserDownload alreadyDr:", alreadyDr)
 	if nil != alreadyDr && alreadyDr.ID > 0 {
-		c.JSON(200, err.Error())
+		c.JSON(200, resp.ToStruct(alreadyDr, err))
 		return
 	}
 	dr := model.DownloadRecord{}
@@ -238,7 +238,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	if config.PriceConfig.VideoRecordPrice > vp.Count {
+	if dr.CastDiamond > vp.Count {
 		c.JSON(200, resp.Fail(5000, "钻石不足"))
 		return
 	}

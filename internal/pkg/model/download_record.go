@@ -48,7 +48,7 @@ func (obj *DownloadRecord) GetByOpenIdAndType(openId string, resourceType int32)
 
 func (obj *DownloadRecord) GetByOpenIdPage(openId string, offset, pageSize int32) ([]DownloadRecord, error) {
 	results := make([]DownloadRecord, 0)
-	err := db.Get().Table(obj.TableName()).Order("id desc").Offset(int(offset)).Limit(int(pageSize)).Where(" open_id = ?", openId).Find(results).Error
+	err := db.Get().Table(obj.TableName()).Order("id desc").Offset(int(offset)).Limit(int(pageSize)).Where(" open_id = ?", openId).Find(&results).Error
 	return results, err
 }
 
