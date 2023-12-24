@@ -22,7 +22,7 @@ type CourtWithDistance struct {
 
 // GetCourts 获取所有场地，按距离倒序排列
 func (s *Service) GetCourts(id int64) ([]model.Court, error) {
-	results, err := s.courtDao.Gets(&model.Court{})
+	results, err := s.courtDao.GetByVenueId(id)
 	if err != nil {
 		log.Println(err)
 		return nil, err
