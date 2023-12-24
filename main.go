@@ -70,6 +70,7 @@ func main() {
 	router.GET("/courts", service.GetCounts)
 	// 活动
 	router.GET("/diamond/activity", service.GetActivity)
+	router.POST("/use/diamond/activity", service.UseActivity)
 	// 8080 port
 	log.Fatal(router.Run())
 }

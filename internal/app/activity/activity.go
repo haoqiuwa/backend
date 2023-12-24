@@ -42,3 +42,7 @@ func (s *Service) FindActivityByIdAndOpenId(id int32, openId string) (*model.Act
 	}
 	return a, nil
 }
+
+func (s *Service) FindActivityById(id int32) (*model.Activity, error) {
+	return s.ActivityDao.FindById(id)
+}
