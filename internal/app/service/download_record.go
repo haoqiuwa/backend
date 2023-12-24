@@ -29,13 +29,13 @@ func (s *Service) GetUserDownloadList(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	rt := c.Query("resource_type")
-	resourceType, err := strconv.Atoi(rt)
-	if nil != err {
-		c.JSON(400, "参数错误")
-		return
-	}
-	r, err := s.DownloadRecordService.GetByOpenIdAndType(openID, int32(resourceType))
+	// rt := c.Query("resource_type")
+	// resourceType, err := strconv.Atoi(rt)
+	// if nil != err {
+	// 	c.JSON(400, "参数错误")
+	// 	return
+	// }
+	r, err := s.DownloadRecordService.GetByOpenId(openID)
 	if nil != err {
 		c.JSON(200, "暂无数据")
 		return

@@ -46,6 +46,12 @@ func (obj *DownloadRecord) GetByOpenIdAndType(openId string, resourceType int32)
 	return results, err
 }
 
+func (obj *DownloadRecord) GetByOpenId(openId string) ([]DownloadRecord, error) {
+	results := make([]DownloadRecord, 0)
+	err := db.Get().Table(obj.TableName()).Where(" open_id = ?", openId).Find(results).Error
+	return results, err
+}
+
 func (obj *DownloadRecord) GetById(id int32) (*DownloadRecord, error) {
 	r := &DownloadRecord{}
 	err := db.Get().Table(obj.TableName()).Where("id = ?", id).Find(r).Error
