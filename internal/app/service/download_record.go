@@ -71,12 +71,14 @@ func (s *Service) GetDownloadRecordById(c *gin.Context) {
 	c.JSON(200, resp.ToStruct(r, err))
 }
 
+// 下载
 func (s *Service) UserDownload(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
 	if openID == "" {
 		c.JSON(400, "请先登录")
 		return
 	}
+	log.Println("UserDownload openId:", openID)
 	body, _ := io.ReadAll(c.Request.Body)
 	userDownload := &request.UserDownload{}
 	err := json.Unmarshal(body, userDownload)
@@ -84,22 +86,26 @@ func (s *Service) UserDownload(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
+	log.Println("UserDownload req:", userDownload)
 	v, err := s.VipService.GetByOpenID(openID)
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
+	log.Println("UserDownload vip:", v)
 	alreadyDr, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, userDownload.ResourceId, userDownload.ResourceType)
 	//已经下载过了直接返回记录
 	if err != nil {
 		log.Println("UserDownload GetByOpenIdResourceIdAndresourceType err", err)
 	}
+	log.Println("UserDownload alreadyDr:", alreadyDr)
 	if nil != alreadyDr && alreadyDr.ID > 0 {
 		c.JSON(200, err.Error())
 		return
 	}
 	dr := model.DownloadRecord{}
 	config := Config{}
+	log.Println("UserDownload type: ", userDownload.ResourceType)
 	switch userDownload.ResourceType {
 	case 10: //场次回放
 		video, err := s.EventService.VideoDao.GetVideoById(userDownload.ResourceId)
@@ -107,11 +113,13 @@ func (s *Service) UserDownload(c *gin.Context) {
 			c.JSON(400, err.Error())
 			return
 		}
+		log.Println("UserDownload video: ", video)
 		venue, err := s.VenueService.GetVenueById(video.VenueId)
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
 		}
+		log.Println("UserDownload venue: ", venue)
 		conf := venue.VenueConf
 		config := Config{}
 		err = json.Unmarshal([]byte(conf), &config)
@@ -119,11 +127,13 @@ func (s *Service) UserDownload(c *gin.Context) {
 			c.JSON(400, err.Error())
 			return
 		}
+		log.Println("UserDownload venue conf: ", conf)
 		court, err := s.CourtService.GetCourtByID(video.Court)
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
 		}
+		log.Println("UserDownload venue court: ", court)
 		dr.ResourceType = userDownload.ResourceType
 		dr.ResourceUUID = video.UUID
 		dr.VenueId = video.VenueId
@@ -222,6 +232,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 			return
 		}
 	}
+	log.Println("UserDownload  dr: ", dr)
 	vp, err := s.VipService.GetByOpenID(openID)
 	if err != nil {
 		c.JSON(400, err.Error())
