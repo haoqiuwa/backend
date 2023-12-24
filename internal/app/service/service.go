@@ -30,15 +30,16 @@ type Service struct {
 
 func NewService() *Service {
 	return &Service{
-		UserService:        user.NewService(),
-		CourtService:       court.NewService(),
-		EventService:       event.NewService(),
-		CollectService:     collect.NewService(),
-		RecommendService:   recommend.NewService(),
-		VipService:         vip.NewService(),
-		PayService:         pay.NewService(),
-		VenueService:       venue.NewService(),
-		VideoRecordService: videorecord.NewService(),
-		ActivityService:    activity.NewService(),
+		UserService:           user.NewService(),
+		CourtService:          court.NewService(),
+		EventService:          event.NewService(),
+		CollectService:        collect.NewService(),
+		RecommendService:      recommend.NewService(),
+		VipService:            vip.NewService(),
+		PayService:            pay.NewService(),
+		VenueService:          venue.NewService(),
+		VideoRecordService:    videorecord.NewService(),
+		ActivityService:       activity.NewService(),
+		DownloadRecordService: download.NewService(),
 	}
 }
