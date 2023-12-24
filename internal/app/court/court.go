@@ -77,7 +77,7 @@ func (s *Service) GetAllCourts() ([]model.Court, error) {
 // 	return false, nil
 // }
 
-func (s *Service) GetCourtByID(id int64) (*model.Court, error) {
+func (s *Service) GetCourtByID(id int32) (*model.Court, error) {
 	court, err := s.courtDao.Get(&model.Court{ID: id})
 	if err != nil {
 		return nil, err

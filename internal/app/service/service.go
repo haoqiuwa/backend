@@ -4,6 +4,7 @@ import (
 	"wxcloudrun-golang/internal/app/activity"
 	"wxcloudrun-golang/internal/app/collect"
 	"wxcloudrun-golang/internal/app/court"
+	"wxcloudrun-golang/internal/app/download"
 	"wxcloudrun-golang/internal/app/event"
 	"wxcloudrun-golang/internal/app/pay"
 	"wxcloudrun-golang/internal/app/recommend"
@@ -14,16 +15,17 @@ import (
 )
 
 type Service struct {
-	UserService        *user.Service
-	VenueService       *venue.Service
-	VideoRecordService *videorecord.Service
-	CourtService       *court.Service
-	EventService       *event.Service
-	CollectService     *collect.Service
-	RecommendService   *recommend.Service
-	VipService         *vip.Service
-	PayService         *pay.Service
-	ActivityService    *activity.Service
+	UserService           *user.Service
+	VenueService          *venue.Service
+	VideoRecordService    *videorecord.Service
+	CourtService          *court.Service
+	EventService          *event.Service
+	CollectService        *collect.Service
+	RecommendService      *recommend.Service
+	VipService            *vip.Service
+	PayService            *pay.Service
+	ActivityService       *activity.Service
+	DownloadRecordService *download.Service
 }
 
 func NewService() *Service {

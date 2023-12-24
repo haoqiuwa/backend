@@ -6,7 +6,7 @@ import (
 )
 
 type Venue struct {
-	ID          int64     `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
+	ID          int32     `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
 	VenueName   string    `json:"venue_name" gorm:"column:venue_name;type:varchar(255);default:'';comment:'场馆名称'"`
 	VenueAddr   string    `json:"venue_addr" gorm:"column:venue_addr;type:text;default:'';comment:'场馆地址'"`
 	VenueConf   string    `json:"venue_conf" gorm:"column:venue_conf;type:text;default:'';comment:'场馆配置json'"`

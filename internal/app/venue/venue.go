@@ -21,3 +21,7 @@ func (s *Service) GetVenues() ([]model.Venue, error) {
 func (s *Service) Create(v *model.Venue) (*model.Venue, error) {
 	return s.venueDao.Create(v)
 }
+
+func (s *Service) GetVenueById(id int32) (*model.Venue, error) {
+	return s.venueDao.Get(&model.Venue{ID: id})
+}

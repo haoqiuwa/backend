@@ -124,3 +124,8 @@ func (obj *Video) GetVideoByUUID(uuid string) (*Video, error) {
 	err := db.Get().Table(obj.TableName()).First(&result, "uuid=?", uuid).Error
 	return result, err
 }
+func (obj *Video) GetVideoById(id int32) (*Video, error) {
+	result := new(Video)
+	err := db.Get().Table(obj.TableName()).First(&result, id).Error
+	return result, err
+}

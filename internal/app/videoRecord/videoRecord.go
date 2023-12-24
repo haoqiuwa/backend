@@ -25,3 +25,7 @@ func (s *Service) GetVideoRecords(venueId int32, courtId int32, date int32, hour
 func (s *Service) Create(v *model.VideoRecord) (*model.VideoRecord, error) {
 	return s.videorecordDao.Create(v)
 }
+
+func (s *Service) GetById(id int32) (*model.VideoRecord, error) {
+	return s.videorecordDao.Get(&model.VideoRecord{ID: id})
+}

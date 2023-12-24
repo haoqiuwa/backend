@@ -71,6 +71,10 @@ func main() {
 	// 活动
 	router.GET("/diamond/activity", service.GetActivity)
 	router.POST("/use/diamond/activity", service.UseActivity)
+	//下载
+	router.GET("/downlaod/record/list", service.GetUserDownloadList)
+	router.GET("/downlaod/record", service.GetDownloadRecordById)
+	router.POST("/user/downlaod/record", service.UserDownload)
 	// 8080 port
 	log.Fatal(router.Run())
 }
