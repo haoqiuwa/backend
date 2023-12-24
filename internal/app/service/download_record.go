@@ -142,7 +142,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.HoverImgPath = video.HoverImgPath
 		dr.ResourceId = video.ID
 		dr.OpenID = openID
-		dr.CastDiamond = config.PriceConfig.VideoRecordPrice
+		dr.CastDiamond = config.PriceConfig.CourtVideoPrice
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
@@ -220,7 +220,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.HoverImgPath = clips.HoverImgPath
 		dr.ResourceId = clips.ID
 		dr.OpenID = openID
-		dr.CastDiamond = config.PriceConfig.VideoRecordPrice
+		dr.CastDiamond = config.PriceConfig.AiClipsPrice
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
