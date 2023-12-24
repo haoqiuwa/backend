@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"strconv"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
@@ -86,6 +87,15 @@ func (s *Service) UserDownload(c *gin.Context) {
 	v, err := s.VipService.GetByOpenID(openID)
 	if err != nil {
 		c.JSON(400, err.Error())
+		return
+	}
+	alreadyDr, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, userDownload.ResourceId, userDownload.ResourceType)
+	//已经下载过了直接返回记录
+	if err != nil {
+		log.Println("UserDownload GetByOpenIdResourceIdAndresourceType err", err)
+	}
+	if nil != alreadyDr && alreadyDr.ID > 0 {
+		c.JSON(200, err.Error())
 		return
 	}
 	dr := model.DownloadRecord{}

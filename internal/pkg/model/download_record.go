@@ -57,3 +57,10 @@ func (obj *DownloadRecord) GetById(id int32) (*DownloadRecord, error) {
 	err := db.Get().Table(obj.TableName()).Where("id = ?", id).Find(r).Error
 	return r, err
 }
+
+func (obj *DownloadRecord) GetByOpenIdResourceIdAndresourceType(openid string, resourceId, resourceType int32) (*DownloadRecord, error) {
+	r := &DownloadRecord{}
+	err := db.Get().Table(obj.TableName()).Where("open_id = ? and resource_id= ? and resource_type=?", openid, resourceId, resourceType).Find(r).Error
+	return r, err
+
+}
