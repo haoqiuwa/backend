@@ -188,8 +188,14 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 			return
 		}
 		log.Println("HandlePushEvent Received EventType4:", eventData)
+		ct, err := s.CourtService.GetByVenueIdAndCode(eventData.VenueId, eventData.Court)
+		if nil != err {
+			c.JSON(400, err.Error())
+			return
+		}
 		video := &model.VideoRecord{}
-		video.CourtId = eventData.Court
+		video.CourtCode = eventData.Court
+		video.CourtId = ct.ID
 		video.VenueId = eventData.VenueId
 		video.CreatedTime = time.Now()
 		video.UpdatedTime = time.Now()

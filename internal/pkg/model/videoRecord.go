@@ -13,6 +13,7 @@ type VideoRecord struct {
 	Time           int32     `gorm:"column:time" json:"time"`
 	VenueId        int32     `gorm:"column:venue_id" json:"venue_id"`
 	CourtId        int32     `gorm:"column:court_id" json:"court_id"`
+	CourtCode      int32     `gorm:"column:court_code" json:"court_code"`
 	Hour           int32     `gorm:"column:hour" json:"hour"`
 	CreatedTime    time.Time `gorm:"column:created_time" json:"created_time"`
 	UpdatedTime    time.Time `gorm:"column:updated_time" json:"updated_time"`
