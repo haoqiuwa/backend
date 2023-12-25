@@ -86,7 +86,7 @@ func (s *Service) GetCourtByID(id int32) (*model.Court, error) {
 }
 
 func (s *Service) GetByVenueIdAndCode(venueId int32, courtCode int32) (*model.Court, error) {
-	court, err := s.courtDao.Get(&model.Court{VenueId: venueId, CountCode: courtCode})
+	court, err := s.courtDao.Get(&model.Court{VenueId: venueId, CourtCode: courtCode})
 	if err != nil {
 		return nil, err
 	}
