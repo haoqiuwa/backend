@@ -381,9 +381,9 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		tr.CourtId = int32(courtId)
 		tr.VenueId = int32(venueId)
 		tr.Date = int32(date)
-		tr.CourtCode = court.CountCode
+		tr.CourtCode = court.CourtCode
 		tr.Hour = v
-		vs, err := s.EventService.GetVideoList(int32(date), court.CountCode, v, int32(venueId))
+		vs, err := s.EventService.GetVideoList(int32(date), court.CourtCode, v, int32(venueId))
 		if err != nil {
 			tr.VideoCnt = 0
 			continue
@@ -438,7 +438,7 @@ func (s *Service) GetVideoList(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	data, err := s.EventService.GetVideoList(int32(date), court.CountCode, int32(hour), int32(venueId))
+	data, err := s.EventService.GetVideoList(int32(date), court.CourtCode, int32(hour), int32(venueId))
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
