@@ -128,7 +128,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 			return
 		}
 		log.Println("UserDownload venue conf: ", conf)
-		court, err := s.CourtService.GetCourtByID(video.Court)
+		court, err := s.CourtService.GetByVenueIdAndCode(video.VenueId, video.Court)
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
