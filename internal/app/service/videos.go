@@ -420,7 +420,12 @@ func (s *Service) GetVideoList(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	data, err := s.EventService.GetVideoList(int32(date), int32(courtId), int32(hour), int32(venueId))
+	court, err := s.CourtService.GetCourtByID(int32(courtId))
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	data, err := s.EventService.GetVideoList(int32(date), court.CountCode, int32(hour), int32(venueId))
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
