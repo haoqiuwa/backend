@@ -17,6 +17,7 @@ import (
 type TimeRangeRes struct {
 	VenueId        int32 `json:"venue_id"`
 	CourtId        int32 `json:"court_id"`
+	CourtCode      int32 `json:"court_code"`
 	Date           int32 `json:"date"`
 	Hour           int32 `json:"hour"`
 	VideoCnt       int32 `json:"video_cnt"`
@@ -362,6 +363,11 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
+	court, err := s.CourtService.GetByVenueIdAndCode(int32(venueId), int32(courtId))
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
 	data, err := s.EventService.GetTimeRange(int32(date))
 	if nil == err {
 		sort.Slice(data, func(i, j int) bool {
@@ -375,8 +381,9 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		tr.CourtId = int32(courtId)
 		tr.VenueId = int32(venueId)
 		tr.Date = int32(date)
+		tr.CourtCode = court.CountCode
 		tr.Hour = v
-		vs, err := s.EventService.GetVideoList(int32(date), int32(courtId), v, int32(venueId))
+		vs, err := s.EventService.GetVideoList(int32(date), court.CountCode, v, int32(venueId))
 		if err != nil {
 			tr.VideoCnt = 0
 			continue
