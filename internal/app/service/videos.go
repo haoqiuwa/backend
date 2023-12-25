@@ -363,7 +363,7 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
-	court, err := s.CourtService.GetByVenueIdAndCode(int32(venueId), int32(courtId))
+	court, err := s.CourtService.GetCourtByID(int32(courtId))
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
