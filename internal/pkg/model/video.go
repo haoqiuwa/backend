@@ -78,7 +78,7 @@ func (obj *Video) GetTimeRange(date int32) ([]int32, error) {
 func (obj *Video) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
 	results := make([]int32, 0)
 	// get hours order by desc
-	err := db.Get().Table(obj.TableName()).Where("date = ? and venue_id = ? and court = ? type =100",
+	err := db.Get().Table(obj.TableName()).Where("date = ? and venue_id = ? and court = ? and type =100",
 		date, venueId, courtCode).Order("hour desc").Pluck("distinct hour",
 		&results).Error
 	return results, err
