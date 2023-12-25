@@ -370,7 +370,7 @@ func (s *Service) GetTimeRange(date int32) ([]int32, error) {
 }
 
 func (s *Service) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
-	r, e := s.VideoDao.GetTimeRangeV1(date)
+	r, e := s.VideoDao.GetTimeRangeV1(date, venueId, courtCode)
 	return r, e
 }
 func (s *Service) GetVideoList(date int32, courtID int32, hour int32, venueId int32) ([]*model.Video, error) {
