@@ -368,7 +368,7 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	data, err := s.EventService.GetTimeRange(int32(date))
+	data, err := s.EventService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
 	if nil == err {
 		sort.Slice(data, func(i, j int) bool {
 			return data[i] > data[j]

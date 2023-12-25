@@ -368,6 +368,11 @@ func (s *Service) GetTimeRange(date int32) ([]int32, error) {
 	r, e := s.VideoDao.GetTimeRange(date)
 	return r, e
 }
+
+func (s *Service) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
+	r, e := s.VideoDao.GetTimeRangeV1(date)
+	return r, e
+}
 func (s *Service) GetVideoList(date int32, courtID int32, hour int32, venueId int32) ([]*model.Video, error) {
 	videos, err := s.VideoDao.GetVideoList(date, courtID, hour, venueId)
 	return videos, err
