@@ -33,6 +33,7 @@ type VideoClipsEventReq struct {
 	HoverImgPath string `json:"hover_img_path"`
 	Time         int32  `json:"time"`
 	Team         string `json:"team"`
+	TimeRange    string `json:"time_range"`
 }
 
 // 场次视频抽帧图片

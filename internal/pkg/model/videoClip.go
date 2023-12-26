@@ -16,6 +16,7 @@ type VideoClips struct {
 	UpdateTime   time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_time"` // 更新时间
 	VideoType    int32     `gorm:"column:video_type;default:1;comment:视频类型  1 集锦 2 ai视频" json:"video_type"`      // 视频类型  1 集锦 2 ai视频
 	Time         int32     `gorm:"column:time;default:1;comment:视频时长  1 集锦 2 ai视频" json:"time"`                  // 视频时长
+	TimeRange    string    `gorm:"column:time_range;comment:时间段" json:"time_range"`
 }
 
 // TableName TVideoClip's table name
