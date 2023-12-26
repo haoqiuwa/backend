@@ -162,6 +162,7 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		videoClips.HoverImgPath = eventData.HoverImgPath
 		videoClips.FilePath = eventData.FilePath
 		videoClips.VideoType = eventData.VideoType
+		videoClips.TimeRange = eventData.TimeRange
 		videoClips.Time = eventData.Time
 		videoClips.Team = eventData.Team
 		err = s.EventService.StoreVideoClips(videoClips)
