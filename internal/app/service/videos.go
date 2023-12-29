@@ -374,7 +374,7 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	s.VipService.updateLastVidCid(openID, venueId, court)
+	s.VipService.UpdateLastVidCid(openID, court.VenueId, court.ID)
 	data, err := s.EventService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
 	if nil == err {
 		sort.Slice(data, func(i, j int) bool {
