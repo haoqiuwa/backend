@@ -1,15 +1,18 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 	"wxcloudrun-golang/internal/pkg/db"
+
+	"gorm.io/gorm"
 )
 
 type Vip struct {
 	ID          int32     `gorm:"primary_key;AUTO_INCREMENT;column:id" json:"id"`
 	OpenID      string    `gorm:"type:varchar(256);column:open_id;default:''" json:"open_id"`
 	Count       int32     `gorm:"column:count" json:"count"`
+	LastVenueId int32     `gorm:"column:last_venue_id" json:"last_venue_id"`
+	LastCourtId int32     `gorm:"column:last_court_id" json:"last_court_id"`
 	CreatedTime time.Time `gorm:"type:datetime;column:created_time;default:CURRENT_TIMESTAMP;onUpdate:CURRENT_TIMESTAMP" json:"created_time"`
 	UpdatedTime time.Time `gorm:"type:datetime;column:updated_time;default:CURRENT_TIMESTAMP;onUpdate:CURRENT_TIMESTAMP" json:"updated_time"`
 }
@@ -27,6 +30,11 @@ func (obj *Vip) GetByOpenID(openID string) (*Vip, error) {
 
 func (obj *Vip) Create(vip *Vip) (*Vip, error) {
 	err := db.Get().Create(vip).Error
+	return vip, err
+}
+
+func (obj *Vip) Update(vip *Vip) (*Vip, error) {
+	err := db.Get().Save(vip).Error
 	return vip, err
 }
 

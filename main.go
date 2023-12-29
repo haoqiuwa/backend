@@ -67,6 +67,7 @@ func main() {
 
 	//  场地管理
 	router.GET("/venues", service.GetVenues)
+	router.GET("/venue/detail/:id", service.GetVenueDetail)
 	router.GET("/courts", service.GetCounts)
 	// 活动
 	router.GET("/diamond/activity", service.GetActivity)

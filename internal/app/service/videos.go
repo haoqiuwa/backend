@@ -346,6 +346,11 @@ func (s *Service) TimeRange(c *gin.Context) {
 }
 
 func (s *Service) TimeRangeV1(c *gin.Context) {
+	openID := c.GetHeader("X-WX-OPENID")
+	if openID == "" {
+		c.JSON(400, "请先登录")
+		return
+	}
 	dateStr := c.Query("date")
 	venueIdStr := c.Query("venueId")
 	courtIdStr := c.Query("courtId")
@@ -369,6 +374,7 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
+	s.VipService.updateLastVidCid(openID, venueId, court)
 	data, err := s.EventService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
 	if nil == err {
 		sort.Slice(data, func(i, j int) bool {

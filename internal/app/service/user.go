@@ -29,7 +29,11 @@ func (s *Service) WeChatLogin(c *gin.Context) {
 	// 	c.JSON(400, err.Error())
 	// 	return
 	// }
-	c.JSON(200, resp.ToStruct(true, nil))
+	v, err := s.VipService.GetByOpenID(openID)
+	if nil != err {
+		c.JSON(200, resp.ToStruct(true, nil))
+	}
+	c.JSON(200, resp.ToStruct(v, nil))
 }
 
 type courtReq struct {
