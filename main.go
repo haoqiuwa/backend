@@ -77,5 +77,7 @@ func main() {
 	router.GET("/downlaod/record", service.GetDownloadRecordById)
 	router.POST("/user/downlaod/record", service.UserDownload)
 	// 8080 port
+
+	router.GET("/access_token", service.AccessToken)
 	log.Fatal(router.Run())
 }

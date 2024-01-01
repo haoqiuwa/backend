@@ -2,7 +2,9 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"net/http"
 	"wxcloudrun-golang/internal/pkg/resp"
 
 	"github.com/gin-gonic/gin"
@@ -57,4 +59,20 @@ func (s *Service) StoreCourt(c *gin.Context) {
 func (s *Service) UserOpenId(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
 	c.JSON(200, resp.ToStruct(openID, nil))
+}
+
+func (s *Service) AccessToken(c *gin.Context) {
+	appId := c.Param("appId")
+	appSecret := c.Param("appSecret")
+	url := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret)
+	resp, err := http.Get(url)
+	if err != nil {
+		c.JSON(500, err.Error())
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.JSON(500, err.Error())
+	}
+	c.JSON(200, body)
 }
