@@ -27,9 +27,9 @@ func (obj *VideoRecord) TableName() string {
 	return "t_video_record"
 }
 
-func (obj *VideoRecord) Create(vr *VideoRecord) (*VideoRecord, error) {
+func (obj *VideoRecord) Create(vr *VideoRecord) error {
 	err := db.Get().Create(vr).Error
-	return vr, err
+	return err
 }
 
 func (obj *VideoRecord) Get(vr *VideoRecord) (*VideoRecord, error) {

@@ -211,7 +211,8 @@ func (s *Service) HandlePushEvent(c *gin.Context) {
 		video.Hour = eventData.Hour
 		jsonb, _ := json.Marshal(video)
 		log.Println("json:", string(jsonb))
-		_, err = s.VideoRecordService.Create(video)
+		err = s.VideoRecordService.Create(video)
+		log.Println("EventType4 err:", err)
 	default:
 		c.JSON(400, err.Error())
 		return

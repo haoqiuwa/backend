@@ -22,7 +22,7 @@ func (s *Service) GetVideoRecords(venueId int32, courtId int32, date int32, hour
 	return r, nil
 }
 
-func (s *Service) Create(v *model.VideoRecord) (*model.VideoRecord, error) {
+func (s *Service) Create(v *model.VideoRecord) error {
 	return s.videorecordDao.Create(v)
 }
 
