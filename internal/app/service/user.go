@@ -77,5 +77,5 @@ func (s *Service) AccessToken(c *gin.Context) {
 		c.JSON(500, err.Error())
 	}
 	log.Println("accessToken body==>>", string(body))
-	c.JSON(200, body)
+	c.JSON(200, string(body))
 }
