@@ -63,9 +63,10 @@ func (s *Service) UserOpenId(c *gin.Context) {
 }
 
 func (s *Service) AccessToken(c *gin.Context) {
-	appId := c.Param("appId")
-	appSecret := c.Param("appSecret")
+	appId := c.Query("appId")
+	appSecret := c.Query("appSecret")
 	url := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret)
+	log.Println("accessToken url==>>", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		c.JSON(500, err.Error())
@@ -75,6 +76,6 @@ func (s *Service) AccessToken(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, err.Error())
 	}
-	log.Println("accessToken==>>", string(body))
+	log.Println("accessToken body==>>", string(body))
 	c.JSON(200, body)
 }
