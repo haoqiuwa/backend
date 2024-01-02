@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type AccessToken struct {
@@ -18,7 +19,7 @@ type QRCodeReq struct {
 	Scene      string `json:"scene"`
 	Page       string `json:"page"`
 	CheckPath  bool   `json:"check_path"`
-	EnvVersion string `json:"env_version"`
+	EnvVersion string `json:"env_version"` //正式版为 "release"，体验版为 "trial"，开发版为 "develop"。默认是正式版。
 }
 
 func GetAccessToken() (string, error) {
@@ -43,4 +44,31 @@ func GetAccessToken() (string, error) {
 		return "", err
 	}
 	return accessToken.AccessToken, nil
+}
+
+func GetUnlimitedQRCode(req QRCodeReq) ([]byte, error) {
+	// 获取 Access Token
+	accessToken, err := GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	// 构建获取小程序码的接口URL
+	apiURL := fmt.Sprintf("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%s", accessToken)
+	// 将结构体转换为 JSON 字符串
+	requestBody, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	// 发送 HTTP POST 请求获取小程序码
+	response, err := http.Post(apiURL, "application/json", strings.NewReader(string(requestBody)))
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	// 读取响应内容
+	qrCode, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	return qrCode, nil
 }

@@ -2,11 +2,10 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"wxcloudrun-golang/internal/pkg/resp"
+	"wxcloudrun-golang/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,9 +33,9 @@ func (s *Service) WeChatLogin(c *gin.Context) {
 	// }
 	v, err := s.VipService.GetByOpenID(openID)
 	if nil != err {
-		c.JSON(200, resp.ToStruct(true, nil))
+		c.JSON(http.StatusOK, resp.ToStruct(true, nil))
 	}
-	c.JSON(200, resp.ToStruct(v, nil))
+	c.JSON(http.StatusOK, resp.ToStruct(v, nil))
 }
 
 type courtReq struct {
@@ -54,28 +53,35 @@ func (s *Service) StoreCourt(c *gin.Context) {
 	var courtReq courtReq
 	_ = json.Unmarshal(body, &courtReq)
 	err := s.UserService.StoreCourt(openID, courtReq.Court)
-	c.JSON(200, resp.ToStruct(nil, err))
+	c.JSON(http.StatusOK, resp.ToStruct(nil, err))
 }
 
 func (s *Service) UserOpenId(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
-	c.JSON(200, resp.ToStruct(openID, nil))
+	c.JSON(http.StatusOK, resp.ToStruct(openID, nil))
 }
 
 func (s *Service) AccessToken(c *gin.Context) {
-	appId := c.Query("appId")
-	appSecret := c.Query("appSecret")
-	url := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret)
-	log.Println("accessToken url==>>", url)
-	resp, err := http.Get(url)
-	if err != nil {
-		c.JSON(500, err.Error())
+	token, err := util.GetAccessToken()
+	if nil != err {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		c.JSON(500, err.Error())
+	c.JSON(http.StatusOK, string(token))
+}
+
+func (s *Service) QRCode(c *gin.Context) {
+	idStr := c.Param("id")
+	req := util.QRCodeReq{
+		Scene:      "venueId=" + idStr,
+		Page:       "pages/introduce/index",
+		CheckPath:  false,
+		EnvVersion: "develop",
 	}
-	log.Println("accessToken body==>>", string(body))
-	c.JSON(200, string(body))
+	qrCode, err := util.GetUnlimitedQRCode(req)
+	if nil != err {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.Data(http.StatusOK, "image/jpeg", qrCode)
 }

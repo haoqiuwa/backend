@@ -79,5 +79,6 @@ func main() {
 	// 8080 port
 
 	router.GET("/access_token", service.AccessToken)
+	router.GET("/qrcode/:id", service.QRCode)
 	log.Fatal(router.Run())
 }
