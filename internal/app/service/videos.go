@@ -376,7 +376,8 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 		return
 	}
 	s.VipService.UpdateLastVidCid(openID, court.VenueId, court.ID)
-	data, err := s.EventService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
+	// data, err := s.EventService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
+	data, err := s.VideoRecordService.GetTimeRangeV1(int32(date), int32(venueId), court.CourtCode)
 	if nil == err {
 		sort.Slice(data, func(i, j int) bool {
 			return data[i] > data[j]

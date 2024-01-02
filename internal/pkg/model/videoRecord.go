@@ -54,3 +54,10 @@ func (obj *VideoRecord) GetVideoRecords(venueId int32, courtId int32, date int32
 	err := db.Get().Table(obj.TableName()).Where("venue_id = ?  and court_id = ? and date = ?  and hour = ?  ", venueId, courtId, date, hour).Order("id desc").Find(&results).Error
 	return results, err
 }
+
+func (obj *VideoRecord) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
+	results := make([]int32, 0)
+	// get hours order by desc
+	err := db.Get().Table(obj.TableName()).Where("date = ? and venue_id = ? and court_code = ?", date, venueId, courtCode).Order("hour desc").Pluck("distinct hour", &results).Error
+	return results, err
+}
