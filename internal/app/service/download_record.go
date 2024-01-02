@@ -146,7 +146,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
-		dr.CreateTime = time.Now()
+		dr.CreateTime = model.Time(time.Now())
 		dr.UpdateTime = time.Now()
 	case 20: //录像
 		vr, err := s.VideoRecordService.GetById(userDownload.ResourceId)
@@ -183,7 +183,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
-		dr.CreateTime = time.Now()
+		dr.CreateTime = model.Time(time.Now())
 		dr.UpdateTime = time.Now()
 	case 30: //ai集锦
 		clips, err := s.EventService.VideoClipsDao.GetById(userDownload.ResourceId)
@@ -224,7 +224,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
-		dr.CreateTime = time.Now()
+		dr.CreateTime = model.Time(time.Now())
 		dr.UpdateTime = time.Now()
 	default:
 		if err != nil {
