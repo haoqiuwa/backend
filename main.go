@@ -3,11 +3,20 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 	"wxcloudrun-golang/internal/app/service"
 	"wxcloudrun-golang/internal/pkg/db"
 
 	"github.com/gin-gonic/gin"
 )
+
+// 自定义 Time 类型
+type MyTime time.Time
+
+// 实现 MarshalJSON 方法
+func (t MyTime) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, time.Time(t).Format("2006-01-02 15:04:05"))), nil
+}
 
 func main() {
 	if err := db.Init(); err != nil {
