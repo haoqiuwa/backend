@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"wxcloudrun-golang/internal/pkg/resp"
 
@@ -74,5 +75,6 @@ func (s *Service) AccessToken(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, err.Error())
 	}
+	log.Println("accessToken==>>", string(body))
 	c.JSON(200, body)
 }
