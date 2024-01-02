@@ -207,7 +207,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 			c.JSON(400, err.Error())
 			return
 		}
-		court, err := s.CourtService.GetCourtByID(video.Court)
+		court, err := s.CourtService.GetByVenueIdAndCode(video.VenueId, video.Court)
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
