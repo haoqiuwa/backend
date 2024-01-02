@@ -29,3 +29,14 @@ func (s *Service) GetVenueDetail(c *gin.Context) {
 	}
 	c.JSON(200, resp.ToStruct(r, err))
 }
+
+func (s *Service) GetVenueQrCode(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	r, err := s.VenueService.GetVenueById(int32(id))
+	if nil != err {
+		c.JSON(500, err.Error())
+		return
+	}
+	log.Println(r)
+}
