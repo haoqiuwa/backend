@@ -72,11 +72,12 @@ func (s *Service) AccessToken(c *gin.Context) {
 
 func (s *Service) QRCode(c *gin.Context) {
 	idStr := c.Param("id")
+	typeStr := c.Param("type") //正式版为 "release"，体验版为 "trial"，开发版为 "develop"。默认是正式版。
 	req := util.QRCodeReq{
 		Scene:      "venueId=" + idStr,
 		Page:       "pages/introduce/index",
 		CheckPath:  false,
-		EnvVersion: "develop",
+		EnvVersion: typeStr,
 	}
 	qrCode, err := util.GetUnlimitedQRCode(req)
 	if nil != err {
