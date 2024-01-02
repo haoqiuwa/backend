@@ -398,14 +398,16 @@ func (s *Service) TimeRangeV1(c *gin.Context) {
 			continue
 		}
 		tr.VideoCnt = int32(len(vs))
+		cliCnt := 0
 		for _, vv := range vs {
 			c, err := s.EventService.VideoClipsDao.GetByCourtUuid(vv.UUID)
 			if err != nil {
 				tr.VideoClipsCnt = 0
 				continue
 			}
-			tr.VideoClipsCnt = int32(len(c))
+			cliCnt = cliCnt + len(c)
 		}
+		tr.VideoClipsCnt = int32(cliCnt)
 		records, err := s.VideoRecordService.GetVideoRecords(int32(venueId), int32(courtId), int32(date), v)
 		if nil != err {
 			tr.VideoRecordCnt = 0
