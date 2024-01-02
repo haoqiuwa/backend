@@ -21,6 +21,8 @@ type Venue struct {
 	IsDel       bool      `json:"is_del" gorm:"column:is_del;type:tinyint(1);default:1;comment:'是否删除'"`
 	CreatedTime time.Time `json:"created_time" gorm:"column:created_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'创建时间'"`
 	UpdatedTime time.Time `json:"updated_time" gorm:"column:updated_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:'更新时间'"`
+	ShortName   string    `json:"short_name" gorm:"column:short_name;type:varchar(255);default:'';comment:'简称'"`
+	ServiceTime string    `json:"service_time" gorm:"column:service_time;type:varchar(255);default:'';comment:'营业时间'"`
 }
 
 // TableName get sql table name.获取数据库名字
