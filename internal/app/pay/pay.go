@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -20,7 +21,7 @@ func NewService() *Service {
 type RequestBody struct {
 	Text string `json:"text"`
 	Noid string `json:"noid"`
-	Fee  int    `json:"fee"`
+	Fee  string `json:"fee"`
 }
 
 type PayReq struct {
@@ -64,6 +65,19 @@ type Response struct {
 	} `json:"respdata"`
 }
 
+func stringTo100(str string) (int, error) {
+	// 将字符串转换为浮点数
+	floatValue, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	// 将浮点数乘以 100
+	intValue := int(floatValue * 100)
+
+	return intValue, nil
+}
+
 func (s *Service) UnifiedOrder(openID string, ip string, body string) (*Response,
 	error) {
 	var req RequestBody
@@ -71,11 +85,15 @@ func (s *Service) UnifiedOrder(openID string, ip string, body string) (*Response
 	if err != nil {
 		return nil, err
 	}
+	fee, err := stringTo100(req.Fee)
+	if nil != err {
+		return nil, err
+	}
 	payReq := PayReq{
 		Body:           req.Text,
 		OutTradeNo:     req.Noid,
 		SubMchID:       mchID, // replace with your merchant ID
-		TotalFee:       req.Fee,
+		TotalFee:       fee,
 		OpenID:         openID,
 		SpbillCreateIP: ip,
 		EnvID:          "prod-2gicsblt193f5dc8",
