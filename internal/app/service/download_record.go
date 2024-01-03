@@ -18,6 +18,7 @@ type PriceConfig struct {
 	CourtVideoPrice  int32  `json:"court_video_price"`
 	VideoRecordPrice int32  `json:"video_record_price"`
 	AiClipsPrice     int32  `json:"ai_clips_price"`
+	FreeDownload     bool   `json:"free_download"`
 }
 
 type Config struct {
@@ -121,7 +122,6 @@ func (s *Service) UserDownload(c *gin.Context) {
 		}
 		log.Println("UserDownload venue: ", venue)
 		conf := venue.VenueConf
-		config := Config{}
 		err = json.Unmarshal([]byte(conf), &config)
 		if err != nil {
 			c.JSON(400, err.Error())
@@ -160,7 +160,6 @@ func (s *Service) UserDownload(c *gin.Context) {
 			return
 		}
 		conf := venue.VenueConf
-		config := Config{}
 		err = json.Unmarshal([]byte(conf), &config)
 		if err != nil {
 			c.JSON(400, err.Error())
