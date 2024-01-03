@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -86,6 +87,7 @@ func (s *Service) UnifiedOrder(openID string, ip string, body string) (*Response
 		return nil, err
 	}
 	fee, err := stringTo100(req.Fee)
+	log.Println("UnifiedOrder fee =>>>>>", req.Fee, fee)
 	if nil != err {
 		return nil, err
 	}
