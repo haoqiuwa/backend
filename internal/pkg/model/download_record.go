@@ -17,7 +17,7 @@ type DownloadRecord struct {
 	FilePath       string    `gorm:"column:file_path" json:"file_path"`
 	HoverImgPath   string    `gorm:"column:hover_img_path" json:"hover_img_path"`
 	CurrentDiamond int32     `gorm:"column:current_diamond" json:"current_diamond"`
-	CreateTime     Time      `gorm:"column:create_time" json:"create_time"`
+	CreateTime     time.Time `gorm:"column:create_time" json:"create_time"`
 	UpdateTime     time.Time `gorm:"column:update_time" json:"update_time"`
 	VenueId        int32     `gorm:"column:venue_id" json:"venue_id"`
 	VenueName      string    `gorm:"column:venue_name" json:"venue_name"`
