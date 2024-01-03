@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/shopspring/decimal"
 )
 
 var mchID = "1645284099"
@@ -29,7 +31,7 @@ type PayReq struct {
 	Body           string `json:"body"`
 	OutTradeNo     string `json:"out_trade_no"`
 	SubMchID       string `json:"sub_mch_id"`
-	TotalFee       int    `json:"total_fee"`
+	TotalFee       int64  `json:"total_fee"`
 	OpenID         string `json:"openid"`
 	SpbillCreateIP string `json:"spbill_create_ip"`
 	EnvID          string `json:"env_id"`
@@ -66,17 +68,17 @@ type Response struct {
 	} `json:"respdata"`
 }
 
-func stringTo100(str string) (int, error) {
+func stringTo100(str string) (int64, error) {
 	// 将字符串转换为浮点数
 	floatValue, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return 0, err
 	}
 	// 将浮点数乘以 100
-	intValue := int(floatValue * 100)
-	log.Println("UnifiedOrder fee =>>>>>", str, floatValue, intValue)
-
-	return intValue, nil
+	decimalValue := decimal.NewFromFloat(floatValue)
+	decimalValue = decimalValue.Mul(decimal.NewFromInt(100))
+	log.Println("UnifiedOrder fee =>>>>>", str, floatValue, decimalValue.IntPart())
+	return decimalValue.IntPart(), nil
 }
 
 func (s *Service) UnifiedOrder(openID string, ip string, body string) (*Response,
