@@ -72,9 +72,9 @@ func stringTo100(str string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
 	// 将浮点数乘以 100
 	intValue := int(floatValue * 100)
+	log.Println("UnifiedOrder fee =>>>>>", str, floatValue, intValue)
 
 	return intValue, nil
 }
@@ -87,7 +87,6 @@ func (s *Service) UnifiedOrder(openID string, ip string, body string) (*Response
 		return nil, err
 	}
 	fee, err := stringTo100(req.Fee)
-	log.Println("UnifiedOrder fee =>>>>>", req.Fee, fee)
 	if nil != err {
 		return nil, err
 	}
