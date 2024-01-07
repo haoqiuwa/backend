@@ -1,6 +1,7 @@
 package vip
 
 import (
+	"log"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
 
@@ -89,11 +90,13 @@ func (s *Service) GetByOpenID(openId string) (*model.Vip, error) {
 
 func (s *Service) UpdateLastVidCid(openID string, vid, cid int32) (*model.Vip, error) {
 	v, err := s.VipDao.GetByOpenID(openID)
+	log.Println("UpdateLastVidCid===>", v)
 	if nil != err {
 		return nil, err
 	}
 	v.LastVenueId = vid
 	v.LastCourtId = cid
+	log.Println("UpdateLastVidCid===>", v)
 	s.VipDao.Update(v)
 	return v, nil
 }
