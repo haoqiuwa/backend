@@ -148,6 +148,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CourtName = court.CourtName
 		dr.CreateTime = time.Now()
 		dr.UpdateTime = time.Now()
+		dr.Time = video.Time
 	case 20: //录像
 		vr, err := s.VideoRecordService.GetById(userDownload.ResourceId)
 		if err != nil {
@@ -184,6 +185,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CourtName = court.CourtName
 		dr.CreateTime = time.Now()
 		dr.UpdateTime = time.Now()
+		dr.Time = vr.Time
 	case 30: //ai集锦
 		clips, err := s.EventService.VideoClipsDao.GetById(userDownload.ResourceId)
 		if err != nil {
@@ -225,6 +227,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.CourtName = court.CourtName
 		dr.CreateTime = time.Now()
 		dr.UpdateTime = time.Now()
+		dr.Time = clips.Time
 	default:
 		if err != nil {
 			c.JSON(400, err.Error())

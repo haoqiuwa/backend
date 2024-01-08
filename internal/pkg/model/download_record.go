@@ -23,6 +23,7 @@ type DownloadRecord struct {
 	VenueName      string    `gorm:"column:venue_name" json:"venue_name"`
 	CourtId        int32     `gorm:"column:court_id" json:"court_id"`
 	CourtName      string    `gorm:"column:court_name" json:"court_name"`
+	Time           int32     `gorm:"column:time;default:1;comment:视频时长" json:"time"` // 视频时长
 }
 
 // 自定义 Time 类型
