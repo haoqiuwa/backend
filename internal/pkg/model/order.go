@@ -34,7 +34,7 @@ func (obj *Order) Update(order *Order) (*Order, error) {
 // GetByOpenID 根据openID获取用户信息
 func (obj *Order) GetByOpenID(openID string) ([]*Order, error) {
 	orders := make([]*Order, 0)
-	err := db.Get().Where("open_id = ?", openID).Find(&orders).Error
+	err := db.Get().Where("open_id = ?", openID).Find(&orders).Order("id desc").Error
 	if err != nil {
 		return nil, err
 	}
