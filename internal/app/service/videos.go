@@ -283,6 +283,7 @@ func (s *Service) GetMatchHighlights(c *gin.Context) {
 	courtIDInt, _ := strconv.Atoi(courtID)
 	data, err := s.EventService.GetMatchHighlights(int32(dateInt), int32(courtIDInt), int32(hourInt), openID)
 	if err != nil {
+		log.Println(err)
 		c.JSON(500, err.Error())
 		return
 	}
