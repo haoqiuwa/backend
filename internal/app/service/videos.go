@@ -289,7 +289,7 @@ func (s *Service) GetMatchHighlights(c *gin.Context) {
 	}
 	for _, v := range data.VideoSeries {
 		for _, vv := range v.Videos {
-			d, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, vv.Id, 40)
+			d, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, vv.Id, 50)
 			if nil != err {
 				log.Println("fetchDownloadStatus err", err)
 			}
