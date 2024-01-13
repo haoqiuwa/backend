@@ -148,6 +148,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.OpenID = openID
 		dr.CastDiamond = config.PriceConfig.CourtVideoPrice
 		if userDownload.ResourceType == 50 {
+			log.Println("比赛集锦下载 获取虚拟场地集锦价格")
 			dr.CastDiamond = config.PriceConfig.AiClipsPrice
 		}
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
