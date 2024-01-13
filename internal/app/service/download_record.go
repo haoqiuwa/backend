@@ -108,14 +108,14 @@ func (s *Service) UserDownload(c *gin.Context) {
 	config := Config{}
 	log.Println("UserDownload type: ", userDownload.ResourceType)
 	switch userDownload.ResourceType {
-	case 10, 40: //场次回放
+	case 10, 40, 50: //场次回放
 		video, err := s.EventService.VideoDao.GetVideoById(userDownload.ResourceId)
 		if err != nil {
 			c.JSON(400, err.Error())
 			return
 		}
 		log.Println("UserDownload video: ", video)
-		if userDownload.ResourceType == 40 { //比赛视频没有场地 挂载到-1场地
+		if userDownload.ResourceType == 40 || userDownload.ResourceType == 50 { //比赛视频没有场地 挂载到-1场地
 			video.Court = -1
 			video.VenueId = -1
 		}
@@ -147,6 +147,9 @@ func (s *Service) UserDownload(c *gin.Context) {
 		dr.ResourceId = video.ID
 		dr.OpenID = openID
 		dr.CastDiamond = config.PriceConfig.CourtVideoPrice
+		if userDownload.ResourceType == 50 {
+			dr.CastDiamond = config.PriceConfig.AiClipsPrice
+		}
 		dr.CurrentDiamond = v.Count - dr.CastDiamond
 		dr.VenueName = venue.VenueName
 		dr.CourtName = court.CourtName
