@@ -43,6 +43,13 @@ func (obj *Venue) Get(v *Venue) (*Venue, error) {
 	return result, err
 }
 
+// Get 获取
+func (obj *Venue) GetList() ([]Venue, error) {
+	results := make([]Venue, 0)
+	err := db.Get().Table(obj.TableName()).Where("id > 0").Find(results).Error
+	return results, err
+}
+
 // Gets 获取批量结果
 func (obj *Venue) Gets(v *Venue) ([]Venue, error) {
 	results := make([]Venue, 0)

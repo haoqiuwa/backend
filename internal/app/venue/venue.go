@@ -15,7 +15,7 @@ func NewService() *Service {
 }
 
 func (s *Service) GetVenues() ([]model.Venue, error) {
-	return s.venueDao.Gets(&model.Venue{})
+	return s.venueDao.GetList()
 }
 
 func (s *Service) Create(v *model.Venue) (*model.Venue, error) {
