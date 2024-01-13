@@ -55,6 +55,7 @@ type VideoSeries struct {
 }
 
 type Video struct {
+	Id          int32  `json:id`
 	IsCollected bool   `json:"is_collected"`
 	Url         string `json:"url"`
 	PicUrl      string `json:"pic_url"`
@@ -195,6 +196,7 @@ func (s *Service) getMatchVideosByType(date int32, courtID int32, hour int32, op
 			Url:         videos[index].FilePath,
 			PicUrl:      pictures[index].FilePath,
 			VideoName:   videos[index].VideoName,
+			Id:          videos[index].ID,
 		})
 	}
 	eventDetail.VideoSeries = append(eventDetail.VideoSeries, results)
