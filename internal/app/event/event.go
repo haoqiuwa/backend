@@ -55,11 +55,12 @@ type VideoSeries struct {
 }
 
 type Video struct {
-	Id          int32  `json:"id"`
-	IsCollected bool   `json:"is_collected"`
-	Url         string `json:"url"`
-	PicUrl      string `json:"pic_url"`
-	VideoName   string `json:"video_name"`
+	Id             int32  `json:"id"`
+	IsCollected    bool   `json:"is_collected"`
+	Url            string `json:"url"`
+	PicUrl         string `json:"pic_url"`
+	VideoName      string `json:"video_name"`
+	DownloadStatus bool   `json:"download_status"`
 }
 
 func (s *Service) GetEvents(courtID string, date int32) ([]Event, error) {

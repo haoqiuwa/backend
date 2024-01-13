@@ -287,6 +287,17 @@ func (s *Service) GetMatchHighlights(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
+	for _, v := range data.VideoSeries {
+		for _, vv := range v.Videos {
+			d, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, vv.Id, 40)
+			if nil != err {
+				log.Println("fetchDownloadStatus err", err)
+			}
+			if nil != d && d.ID > 0 {
+				vv.DownloadStatus = true
+			}
+		}
+	}
 	c.JSON(200, resp.ToStruct(data, err))
 }
 
@@ -306,6 +317,17 @@ func (s *Service) GetMatchRecords(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
+	}
+	for _, v := range data.VideoSeries {
+		for _, vv := range v.Videos {
+			d, err := s.DownloadRecordService.GetByOpenIdResourceIdAndresourceType(openID, vv.Id, 40)
+			if nil != err {
+				log.Println("fetchDownloadStatus err", err)
+			}
+			if nil != d && d.ID > 0 {
+				vv.DownloadStatus = true
+			}
+		}
 	}
 	c.JSON(200, resp.ToStruct(data, err))
 
