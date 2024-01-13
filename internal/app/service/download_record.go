@@ -115,6 +115,10 @@ func (s *Service) UserDownload(c *gin.Context) {
 			return
 		}
 		log.Println("UserDownload video: ", video)
+		if userDownload.ResourceType == 40 { //比赛视频没有场地 挂载到-1场地
+			video.Court = -1
+			video.VenueId = -1
+		}
 		venue, err := s.VenueService.GetVenueById(video.VenueId)
 		if err != nil {
 			c.JSON(400, err.Error())
