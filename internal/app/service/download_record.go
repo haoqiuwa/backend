@@ -108,7 +108,7 @@ func (s *Service) UserDownload(c *gin.Context) {
 	config := Config{}
 	log.Println("UserDownload type: ", userDownload.ResourceType)
 	switch userDownload.ResourceType {
-	case 10: //场次回放
+	case 10, 40: //场次回放
 		video, err := s.EventService.VideoDao.GetVideoById(userDownload.ResourceId)
 		if err != nil {
 			c.JSON(400, err.Error())
