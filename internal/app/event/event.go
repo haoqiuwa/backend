@@ -55,7 +55,7 @@ type VideoSeries struct {
 }
 
 type Video struct {
-	Id          int32  `json:id`
+	Id          int32  `json:"id"`
 	IsCollected bool   `json:"is_collected"`
 	Url         string `json:"url"`
 	PicUrl      string `json:"pic_url"`
