@@ -2,23 +2,29 @@ package collect
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
+	"wxcloudrun-golang/internal/pkg/resp"
 )
 
 type Service struct {
-	CollectDao   *model.Collect
-	UserEventDao *model.UserEvent
-	SurveyDao    *model.Survey
+	CollectDao    *model.Collect
+	UserEventDao  *model.UserEvent
+	SurveyDao     *model.Survey
+	VideoDao      *model.Video
+	VideoClipsDao *model.VideoClips
 }
 
 func NewService() *Service {
 	return &Service{
-		CollectDao:   &model.Collect{},
-		UserEventDao: &model.UserEvent{},
-		SurveyDao:    &model.Survey{},
+		CollectDao:    &model.Collect{},
+		UserEventDao:  &model.UserEvent{},
+		SurveyDao:     &model.Survey{},
+		VideoDao:      &model.Video{},
+		VideoClipsDao: &model.VideoClips{},
 	}
 }
 
@@ -105,7 +111,8 @@ func (s *Service) GetUserDownload(openID string) (int32, error) {
 }
 
 func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, error) {
-	data, err := s.UserEventDao.Gets(&model.UserEvent{OpenID: openID, FileID: fileID})
+	log.Printf("GetUserDownloadStatus openID:%s ,fileID:%s", openID, fileID)
+	data, err := s.UserEventDao.Gets(&model.UserEvent{OpenID: openID, FileID: fileID, EventType: 2})
 	if err != nil {
 		fmt.Println(err)
 		return false, err
@@ -113,11 +120,14 @@ func (s *Service) GetUserDownloadStatus(openID string, fileID string) (bool, err
 	return len(data) > 0, nil
 }
 
-func (s *Service) GetUserDownloads(openID string, videoType int32) ([]model.Collect, error) {
-	data, err := s.UserEventDao.Gets(&model.UserEvent{OpenID: openID, EventType: 2, VideoType: videoType})
+func (s *Service) GetUserDownloads(openID string, queryType string, page int32, pageSize int32) (resp.PageInfo, error) {
+	offset := (page - 1) * pageSize
+	pageInfo := resp.PageInfo{}
+	pageInfo.Page = page
+	data, err := s.UserEventDao.PageGets(openID, queryType, int(offset), int(pageSize))
 	if err != nil {
 		fmt.Println(err)
-		return nil, err
+		return pageInfo, err
 	}
 	var result []model.Collect
 	for _, v := range data {
@@ -125,7 +135,7 @@ func (s *Service) GetUserDownloads(openID string, videoType int32) ([]model.Coll
 			ID:          v.ID,
 			OpenID:      v.OpenID,
 			FileID:      v.FileID,
-			PicURL:      videoToPicLink(v.FileID),
+			PicURL:      s.findHoverImg(v.FileID, v.VideoType),
 			VideoType:   v.VideoType,
 			CreatedTime: v.CreatedTime,
 			UpdatedTime: v.UpdatedTime,
@@ -135,11 +145,41 @@ func (s *Service) GetUserDownloads(openID string, videoType int32) ([]model.Coll
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].CreatedTime.After(result[j].CreatedTime)
 	})
-	return result, nil
+	if len(result) == int(pageSize) {
+		pageInfo.HasMore = true
+	}
+	pageInfo.PageData = result
+	return pageInfo, nil
+}
+
+func (s *Service) findHoverImg(field string, videoType int32) string {
+	if videoType == 6 || videoType == 7 {
+		return ""
+	}
+	if videoType == 2 || videoType == 3 {
+		v, r := s.VideoDao.Get(&model.Video{
+			FilePath: field,
+		})
+		if r != nil {
+			log.Println("findHoverImg err", r)
+		}
+		return v.HoverImgPath
+	}
+	if videoType == 4 || videoType == 5 {
+		v, r := s.VideoClipsDao.Get(&model.VideoClips{
+			FilePath: field,
+		})
+		if r != nil {
+			log.Println("findHoverImg err", r)
+		}
+		return v.HoverImgPath
+	}
+	return ""
+
 }
 
 // get pic link by video link, video link like "highlight/2021/01/01/vxxx.
-//mp4" and pic link like "highlight/2021/01/01/pxxx.PNG"
+// mp4" and pic link like "highlight/2021/01/01/pxxx.PNG"
 func videoToPicLink(videoLink string) string {
 	// 分割视频链接，获取最后一部分
 	parts := strings.Split(videoLink, "/")

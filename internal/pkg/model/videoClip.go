@@ -15,7 +15,8 @@ type VideoClips struct {
 	CreateTime   time.Time `gorm:"column:create_time;comment:创建时间" json:"create_time"`                           // 创建时间
 	UpdateTime   time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_time"` // 更新时间
 	VideoType    int32     `gorm:"column:video_type;default:1;comment:视频类型  1 集锦 2 ai视频" json:"video_type"`      // 视频类型  1 集锦 2 ai视频
-	Time         int32     `gorm:"column:time;default:1;comment:视频时长  1 集锦 2 ai视频" json:"time"`                  // 视频时长
+	Time         int32     `gorm:"column:time;default:1;comment:视频时长" json:"time"`                               // 视频时长
+	TimeRange    string    `gorm:"column:time_range;comment:时间段" json:"time_range"`
 }
 
 // TableName TVideoClip's table name
@@ -23,6 +24,11 @@ func (*VideoClips) TableName() string {
 	return "t_video_clips"
 }
 
+func (obj *VideoClips) Get(videoClips *VideoClips) (*VideoClips, error) {
+	result := new(VideoClips)
+	err := db.Get().Table(obj.TableName()).Where(videoClips).First(result).Error
+	return result, err
+}
 func (*VideoClips) Create(obj *VideoClips) (*VideoClips, error) {
 	err := db.Get().Create(obj).Error
 	return obj, err
@@ -37,4 +43,9 @@ func (obj *VideoClips) GetByCourtUuidAndVideoType(uuid string, videoType int32) 
 	results := make([]VideoClips, 0)
 	err := db.Get().Table(obj.TableName()).Where("court_uuid = ? and video_type= ?", uuid, videoType).Find(&results).Error
 	return results, err
+}
+func (obj VideoClips) GetById(id int32) (VideoClips, error) {
+	var videoClips VideoClips
+	err := db.Get().First(&videoClips, id).Error
+	return videoClips, err
 }

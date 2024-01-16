@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 	"wxcloudrun-golang/internal/pkg/model"
+
+	"gorm.io/gorm"
 )
 
 var cosLink = "cloud://prod-2gicsblt193f5dc8.7072-prod-2gicsblt193f5dc8-1318337180/"
@@ -21,9 +23,11 @@ type Service struct {
 
 func NewService() *Service {
 	return &Service{
-		VideoDao:   &model.Video{},
-		CourtDao:   &model.Court{},
-		CollectDao: &model.Collect{},
+		VideoDao:      &model.Video{},
+		CourtDao:      &model.Court{},
+		CollectDao:    &model.Collect{},
+		VideoClipsDao: &model.VideoClips{},
+		VideoImgDao:   &model.VideoImg{},
 	}
 }
 
@@ -51,10 +55,12 @@ type VideoSeries struct {
 }
 
 type Video struct {
-	IsCollected bool   `json:"is_collected"`
-	Url         string `json:"url"`
-	PicUrl      string `json:"pic_url"`
-	VideoName   string `json:"video_name"`
+	Id             int32  `json:"id"`
+	IsCollected    bool   `json:"is_collected"`
+	Url            string `json:"url"`
+	PicUrl         string `json:"pic_url"`
+	VideoName      string `json:"video_name"`
+	DownloadStatus bool   `json:"download_status"`
 }
 
 func (s *Service) GetEvents(courtID string, date int32) ([]Event, error) {
@@ -81,7 +87,7 @@ func (s *Service) GetEvents(courtID string, date int32) ([]Event, error) {
 }
 
 func (s *Service) GetVideos(date int32, courtID int32, hour int32, openID string) (*EventDetail, error) {
-	result, err := s.getVideosByType(date, courtID, hour, openID, 1)
+	result, err := s.getVideosByType(date, courtID, hour, openID, 100)
 	return result, err
 }
 
@@ -128,8 +134,8 @@ func (s *Service) StoreVideo(video *model.Video) (string, error) {
 
 func (s *Service) StoreCourtVideo(video *model.Video) (bool, error) {
 	old, err := s.VideoDao.GetVideoByUUID(video.UUID)
-	if err != nil {
-		return false, err
+	if err == gorm.ErrRecordNotFound {
+		old = nil
 	}
 	if old != nil {
 		video.ID = old.ID
@@ -191,6 +197,7 @@ func (s *Service) getMatchVideosByType(date int32, courtID int32, hour int32, op
 			Url:         videos[index].FilePath,
 			PicUrl:      pictures[index].FilePath,
 			VideoName:   videos[index].VideoName,
+			Id:          videos[index].ID,
 		})
 	}
 	eventDetail.VideoSeries = append(eventDetail.VideoSeries, results)
@@ -356,7 +363,29 @@ func (s *Service) GetHighlightsVideos(uuid string) ([]model.VideoClips, error) {
 	r, e := s.VideoClipsDao.GetByCourtUuidAndVideoType(uuid, 1)
 	return r, e
 }
-func (s *Service) GetVideoImg(uuid string) ([]model.VideoImg, error) {
-	r, e := s.VideoImgDao.GetByCourtUuid(uuid)
+func (s *Service) GetVideoImg(uuid string, imgType int32) ([]model.VideoImg, error) {
+	r, e := s.VideoImgDao.GetByCourtUuid(uuid, imgType)
+	return r, e
+}
+func (s *Service) GetTimeRange(date int32) ([]int32, error) {
+	r, e := s.VideoDao.GetTimeRange(date)
+	return r, e
+}
+
+func (s *Service) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
+	r, e := s.VideoDao.GetTimeRangeV1(date, venueId, courtCode)
+	return r, e
+}
+func (s *Service) GetVideoList(date int32, courtID int32, hour int32, venueId int32) ([]*model.Video, error) {
+	videos, err := s.VideoDao.GetVideoList(date, courtID, hour, venueId)
+	return videos, err
+}
+func (s *Service) VideoDetail(uuid string) (*model.Video, error) {
+	r, e := s.VideoDao.GetVideoByUUID(uuid)
+	return r, e
+}
+
+func (s *Service) GetAiVideoDetail(id int32) (model.VideoClips, error) {
+	r, e := s.VideoClipsDao.GetById(id)
 	return r, e
 }

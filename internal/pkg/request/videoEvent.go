@@ -11,6 +11,7 @@ type EventReq struct {
 // 场次主视频
 type VideoEventReq struct {
 	UUID           string `json:"uuid"`
+	VenueId        int32  `json:"venue_id"`
 	Court          int32  `json:"court"`
 	FilePath       string `json:"file_path"`
 	FileName       string `json:"file_name"`
@@ -28,10 +29,11 @@ type VideoEventReq struct {
 type VideoClipsEventReq struct {
 	UUID         string `json:"uuid"`
 	FilePath     string `json:"file_path"`
-	VideoType    int32  `json:"vide_type"`
+	VideoType    int32  `json:"video_type"`
 	HoverImgPath string `json:"hover_img_path"`
 	Time         int32  `json:"time"`
 	Team         string `json:"team"`
+	TimeRange    string `json:"time_range"`
 }
 
 // 场次视频抽帧图片
@@ -39,4 +41,19 @@ type VideoImgEventReq struct {
 	UUID         string `json:"uuid"`
 	RelativeTime int32  `json:"relative_time"`
 	FilePath     string `json:"file_path"`
+	ImgType      int32  `json:"img_type"`
+}
+
+type VideoRecordEventReq struct {
+	UUID           string `json:"uuid"`
+	ID             int32  `json:"id"`
+	FilePath       string `json:"file_path"`
+	Date           int32  `json:"date"`
+	Time           int32  `json:"time"`
+	VenueId        int32  `gorm:"column:venue_id" json:"venue_id"`
+	Court          int32  `json:"court"`
+	Hour           int32  `json:"hour"`
+	HoverImgPath   string `json:"hover_img_path"`
+	StartTimestamp int64  `json:"start_timestamp"`
+	EndTimestamp   int64  `json:"end_timestamp"`
 }

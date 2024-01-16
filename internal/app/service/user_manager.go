@@ -3,12 +3,15 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"strconv"
 	"wxcloudrun-golang/internal/pkg/model"
 	"wxcloudrun-golang/internal/pkg/resp"
 
 	"github.com/gin-gonic/gin"
 )
+
+const pageSize int32 = 10
 
 // ToggleCollectVideo 收藏视频
 func (s *Service) ToggleCollectVideo(c *gin.Context) {
@@ -50,7 +53,15 @@ func (s *Service) GetUserDownload(c *gin.Context) {
 // GetUserDownloadStatus 获取用户下载状态
 func (s *Service) GetUserDownloadStatus(c *gin.Context) {
 	openID := c.GetHeader("X-WX-OPENID")
+	if openID == "" {
+		c.JSON(400, "请先登录")
+		return
+	}
 	videoID := c.Query("file_id")
+	if videoID == "" {
+		c.JSON(400, resp.ToStruct("参数错误", nil))
+		return
+	}
 	data, err := s.CollectService.GetUserDownloadStatus(openID, videoID)
 	if err != nil {
 		c.JSON(500, err.Error())
@@ -66,9 +77,16 @@ func (s *Service) GetUserDownloads(c *gin.Context) {
 		c.JSON(400, "请先登录")
 		return
 	}
-	videoType := c.Query("video_type")
-	videoTypeInt, _ := strconv.Atoi(videoType)
-	data, err := s.CollectService.GetUserDownloads(openID, int32(videoTypeInt))
+	queryType := c.Query("query_type") // 前端传递
+	page := c.Query("page")
+	if page == "" {
+		page = "1"
+	}
+	if queryType == "" {
+		queryType = "video"
+	}
+	pageInt, _ := strconv.Atoi(page)
+	data, err := s.CollectService.GetUserDownloads(openID, queryType, int32(pageInt), pageSize)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -106,6 +124,7 @@ func (s *Service) CollectUserEvent(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
+	log.Println("CollectUserEvent data:", string(body))
 	data, err := s.CollectService.CollectUserEvent(openID, userEvent.FileID, userEvent.EventType, userEvent.FromPage,
 		userEvent.VideoType)
 	if err != nil {

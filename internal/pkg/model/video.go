@@ -12,6 +12,7 @@ type Video struct {
 	Date         int32     `gorm:"column:date" json:"date"`
 	Time         int32     `gorm:"column:time" json:"time"`
 	Type         int32     `gorm:"column:type" json:"type"`
+	VenueId      int32     `gorm:"column:venue_id" json:"venue_id"`
 	Court        int32     `gorm:"column:court" json:"court"`
 	Hour         int32     `gorm:"column:hour" json:"hour"`
 	FileName     string    `gorm:"column:file_name" json:"file_name"`
@@ -65,12 +66,38 @@ func (obj *Video) GetDistinctHours(date int32) ([]int32, error) {
 	return results, err
 }
 
+func (obj *Video) GetTimeRange(date int32) ([]int32, error) {
+	results := make([]int32, 0)
+	// get hours order by desc
+	err := db.Get().Table(obj.TableName()).Where("date = ? and type =100",
+		date).Order("hour desc").Pluck("distinct hour",
+		&results).Error
+	return results, err
+}
+
+func (obj *Video) GetTimeRangeV1(date int32, venueId int32, courtCode int32) ([]int32, error) {
+	results := make([]int32, 0)
+	// get hours order by desc
+	err := db.Get().Table(obj.TableName()).Where("date = ? and venue_id = ? and court = ? and type =100",
+		date, venueId, courtCode).Order("hour desc").Pluck("distinct hour",
+		&results).Error
+	return results, err
+}
 func (obj *Video) GetVideos(date int32, courtID int32, hour int32, videoType int32) ([]*Video, error) {
 	results := make([]*Video, 0)
 	err := db.Get().Table(obj.TableName()).Where(
 		"date = ? and court = ? and hour = ? and file_name like 'v%' and type = ?", date,
 		courtID,
 		hour, videoType).Order("file_name").Find(&results).Error
+	return results, err
+}
+
+func (obj *Video) GetVideoList(date int32, courtID int32, hour int32, venueId int32) ([]*Video, error) {
+	results := make([]*Video, 0)
+	err := db.Get().Table(obj.TableName()).Where(
+		"date = ? and court = ? and hour = ? and venue_id = ? and type=100", date,
+		courtID,
+		hour, venueId).Order("id desc").Find(&results).Error
 	return results, err
 }
 
@@ -104,5 +131,10 @@ func (obj *Video) GetMatchPictures(courtID int32, videoType int32) ([]*Video, er
 func (obj *Video) GetVideoByUUID(uuid string) (*Video, error) {
 	result := new(Video)
 	err := db.Get().Table(obj.TableName()).First(&result, "uuid=?", uuid).Error
+	return result, err
+}
+func (obj *Video) GetVideoById(id int32) (*Video, error) {
+	result := new(Video)
+	err := db.Get().Table(obj.TableName()).First(&result, id).Error
 	return result, err
 }

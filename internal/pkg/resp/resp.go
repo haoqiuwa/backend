@@ -20,3 +20,11 @@ func ToStruct(data interface{}, err error) *Resp {
 		Data: nil,
 	}
 }
+
+func Fail(code int32, msg string) *Resp {
+	return &Resp{
+		Code: code,
+		Msg:  msg,
+		Data: nil,
+	}
+}
